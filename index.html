@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>越南七天六晚 · 2026年4月29日—5月5日</title>
+  <link rel="preconnect" href="https://api.open-meteo.com" />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+  <link rel="preconnect" href="https://a.basemaps.cartocdn.com" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" crossorigin="anonymous" />
+  <style>
+    :root {
+      --sun: #ffc93c;
+      --coral: #ff6b4a;
+      --magenta: #ff2d88;
+      --pool: #00c9bf;
+      --lime: #c4f000;
+      --papaya: #fff0e5;
+      --surf: #e8fff8;
+      --orchid: #ffe0f0;
+      --text: #2d1f3d;
+      --muted: #6b5a7a;
+      --card: rgba(255, 255, 255, 0.94);
+      --border: rgba(255, 107, 74, 0.28);
+      --glow-coral: 0 12px 36px rgba(255, 107, 74, 0.2);
+      --glow-pool: 0 8px 28px rgba(0, 201, 191, 0.18);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Nunito", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      line-height: 1.55;
+      min-height: 100vh;
+      background:
+        radial-gradient(120% 55% at -5% -15%, rgba(255, 201, 60, 0.55), transparent 52%),
+        radial-gradient(90% 50% at 105% 5%, rgba(255, 45, 136, 0.38), transparent 48%),
+        radial-gradient(80% 45% at 50% 110%, rgba(0, 201, 191, 0.35), transparent 55%),
+        radial-gradient(60% 40% at 0% 80%, rgba(196, 240, 0, 0.22), transparent 45%),
+        linear-gradient(168deg, #fff9f2 0%, #fff5fb 38%, #f2fffc 100%);
+      background-attachment: fixed;
+    }
+    .wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 1.35rem 1rem 3rem;
+    }
+    header {
+      margin-bottom: 1.35rem;
+      padding: 1rem 1.1rem 1.15rem;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 240, 250, 0.88) 100%);
+      border: 2px solid rgba(255, 201, 60, 0.45);
+      box-shadow: var(--glow-coral), var(--glow-pool);
+    }
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin: 0 0 0.4rem;
+      letter-spacing: 0.02em;
+      line-height: 1.2;
+      background: linear-gradient(105deg, #ff2d88 0%, #ff6b4a 40%, #ffc93c 85%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+    .flight-strip {
+      display: grid;
+      gap: 0.45rem;
+      margin-top: 0.85rem;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .flight-strip span {
+      color: #e0006f;
+      font-weight: 800;
+    }
+    .day {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      padding: 1.05rem 1.15rem;
+      margin-bottom: 0.9rem;
+      box-shadow: 0 4px 20px rgba(255, 107, 74, 0.08);
+      backdrop-filter: blur(8px);
+    }
+    .day-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.35rem 0.75rem;
+      margin-bottom: 0.65rem;
+    }
+    .day-tag {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #fff;
+      background: linear-gradient(90deg, var(--pool), #00e5c5);
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+      box-shadow: 0 2px 10px rgba(0, 201, 191, 0.35);
+    }
+    .day-title {
+      font-size: 1.08rem;
+      font-weight: 800;
+    }
+    .day-date {
+      font-size: 0.86rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .weather-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .wx {
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, rgba(0, 201, 191, 0.15), rgba(255, 201, 60, 0.2));
+      border: 2px solid rgba(0, 201, 191, 0.35);
+      border-radius: 12px;
+      padding: 0.4rem 0.65rem;
+      color: #0a6b63;
+    }
+    .wx.loading {
+      color: var(--muted);
+      border-style: dashed;
+      background: rgba(255, 255, 255, 0.6);
+    }
+    .wx.err {
+      border-color: rgba(255, 107, 74, 0.55);
+      color: #c43a1a;
+      background: rgba(255, 240, 230, 0.9);
+    }
+    .wx strong {
+      color: #e0006f;
+    }
+    section h3 {
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #e0006f;
+      margin: 0.65rem 0 0.28rem;
+      font-weight: 800;
+    }
+    ul {
+      margin: 0;
+      padding-left: 1.15rem;
+    }
+    li {
+      margin: 0.22rem 0;
+      font-weight: 600;
+    }
+    .meta {
+      font-size: 0.88rem;
+      color: #55486a;
+      margin-top: 0.55rem;
+      font-weight: 600;
+    }
+    .meta b {
+      color: #00a89a;
+      font-weight: 800;
+    }
+    footer {
+      margin-top: 1.5rem;
+      font-size: 0.76rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    footer a {
+      color: #e0006f;
+      font-weight: 700;
+    }
+    .map-card {
+      background: linear-gradient(160deg, rgba(255, 255, 255, 0.95) 0%, rgba(232, 255, 248, 0.9) 100%);
+      border: 2px solid rgba(0, 201, 191, 0.35);
+      border-radius: 20px;
+      padding: 0.85rem 0.85rem 0.75rem;
+      margin-top: 1.15rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--glow-pool);
+    }
+    .map-card h2 {
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #00a89a;
+      margin: 0 0 0.55rem;
+      font-weight: 800;
+    }
+    #trip-map {
+      height: min(42vh, 320px);
+      min-height: 220px;
+      width: 100%;
+      border-radius: 16px;
+      border: 3px solid rgba(255, 201, 60, 0.55);
+      z-index: 0;
+      box-shadow: 0 6px 24px rgba(255, 107, 74, 0.12);
+    }
+    .map-card .map-note {
+      font-size: 0.74rem;
+      color: var(--muted);
+      margin: 0.5rem 0 0;
+      line-height: 1.45;
+      font-weight: 600;
+    }
+    #map-context {
+      font-weight: 700;
+      color: #c2185c;
+    }
+    .leaflet-popup-content-wrapper {
+      border-radius: 12px;
+      font-family: "Nunito", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      box-shadow: 0 8px 28px rgba(255, 45, 136, 0.2);
+    }
+    .day-picker {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+    }
+    .day-tab-row {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 0.3rem;
+      width: 100%;
+    }
+    .day-picker .pick-label {
+      width: 100%;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #e0006f;
+      font-weight: 800;
+      margin: 0 0 0.1rem;
+    }
+    .day-tab {
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 0.42rem 0.15rem;
+      border: 2px solid rgba(255, 107, 74, 0.35);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.88);
+      color: var(--text);
+      font-size: clamp(0.62rem, 1.8vw, 0.76rem);
+      font-family: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      line-height: 1.2;
+      text-align: center;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    }
+    .day-tab:hover {
+      border-color: var(--magenta);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(255, 45, 136, 0.2);
+    }
+    .day-tab[aria-selected="true"] {
+      border-color: transparent;
+      background: linear-gradient(135deg, #ff2d88 0%, #ff6b4a 50%, #ffc93c 100%);
+      color: #fff;
+      box-shadow: 0 8px 26px rgba(255, 45, 136, 0.45);
+      transform: translateY(-1px);
+    }
+    .day-tab .tab-n {
+      display: block;
+      font-weight: 800;
+      color: #00a89a;
+      font-size: clamp(0.58rem, 1.6vw, 0.68rem);
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .day-tab[aria-selected="true"] .tab-n,
+    .day-tab[aria-selected="true"] .tab-d {
+      color: #fff;
+    }
+    .day-tab .tab-d {
+      display: block;
+      font-size: clamp(0.55rem, 1.5vw, 0.65rem);
+      color: var(--muted);
+      margin-top: 0.08rem;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .day-tab .tab-ico {
+      font-size: clamp(0.85rem, 2.4vw, 1.02rem);
+      line-height: 1;
+      display: block;
+      margin-bottom: 0.08rem;
+    }
+    .day-title .de {
+      margin-right: 0.35rem;
+    }
+    .day-panel {
+      display: none;
+    }
+    .day-panel.is-active {
+      display: block;
+    }
+    .city-tips {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 224, 240, 0.5) 100%);
+      border: 2px solid rgba(255, 45, 136, 0.28);
+      border-radius: 20px;
+      margin-top: 1rem;
+      overflow: hidden;
+      box-shadow: 0 6px 28px rgba(255, 45, 136, 0.1);
+    }
+    .city-tips > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 0.85rem 2.2rem 0.85rem 1.05rem;
+      position: relative;
+      user-select: none;
+      border-bottom: 2px solid transparent;
+    }
+    .city-tips > summary::-webkit-details-marker {
+      display: none;
+    }
+    .city-tips[open] > summary {
+      border-bottom-color: rgba(255, 107, 74, 0.2);
+    }
+    .city-tips > summary:hover {
+      background: rgba(255, 201, 60, 0.15);
+    }
+    .city-tips-summary .st {
+      font-weight: 800;
+      font-size: 1rem;
+      background: linear-gradient(90deg, #ff2d88, #ff6b4a);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .city-tips-summary .sub {
+      font-size: 0.84rem;
+      color: var(--muted);
+      display: block;
+      margin-top: 0.25rem;
+      font-weight: 700;
+    }
+    .city-tips-summary::after {
+      content: "▼";
+      position: absolute;
+      right: 0.95rem;
+      top: 50%;
+      margin-top: -0.35em;
+      font-size: 0.55rem;
+      color: #ff2d88;
+      font-weight: 800;
+      transition: transform 0.2s;
+    }
+    .city-tips[open] > summary::after {
+      transform: rotate(-180deg);
+    }
+    .city-tips-body {
+      padding: 0.7rem 1.05rem 1.05rem;
+      font-size: 0.89rem;
+      color: #55486a;
+      font-weight: 600;
+    }
+    .tip-block {
+      padding: 0.55rem 0;
+      border-top: 2px dashed rgba(255, 107, 74, 0.22);
+    }
+    .tip-block:first-child {
+      border-top: 0;
+      padding-top: 0.2rem;
+    }
+    .tip-block h4 {
+      margin: 0 0 0.4rem;
+      font-size: 0.95rem;
+      color: #00a89a;
+      font-weight: 800;
+    }
+    .tip-block p {
+      margin: 0 0 0.45rem;
+    }
+    .tip-block p:last-child {
+      margin-bottom: 0;
+    }
+    .tip-block .k {
+      color: #ff2d88;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 0.22rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>🇻🇳🌴 越南七天六晚行程 ✈️</h1>
+      <p>🗓️ 2026年4月29日（周二）— 5月5日（周一）· 🏛️河内 · 🏝️芽庄 · 🏜️美奈 · 🌇胡志明市</p>
+      <div class="flight-strip">
+        <div>🛫 去程：<span>VN 533</span> 上海浦东 15:50 → 河内 18:25（4月29日）</div>
+        <div>🛬 回程：<span>VN 524</span> 胡志明新山一 07:20 → 上海浦东 12:40（5月5日，以出票为准）</div>
+      </div>
+    </header>
+
+    <nav class="day-picker" id="day-picker" aria-label="选择行程日"></nav>
+
+    <div id="days"></div>
+
+    <details class="city-tips" id="city-tips" open>
+      <summary class="city-tips-summary">
+        <span class="st">📚 城市小知识</span>
+        <span class="sub" id="city-tips-label"></span>
+      </summary>
+      <div class="city-tips-body" id="city-tips-body"></div>
+    </details>
+
+    <section class="map-card" aria-label="行程地图">
+      <h2>🗺️ 行程地图</h2>
+      <div id="trip-map" role="img" aria-label="行程地图"></div>
+      <p class="map-note" id="map-context"></p>
+      <p class="map-note">🧭 标注为大致市中心，便于看动线；酒店与景点请再结合导航精确定位。</p>
+    </section>
+
+    <footer>
+      🗺️ 地图底图 © OpenStreetMap 贡献者 · <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>。
+      🌤️ 天气数据来自 <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> 预报，仅供参考；出行前请以当地实时预报为准。
+    </footer>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" crossorigin="anonymous"></script>
+  <script>
+    const YEAR = 2026;
+
+    const wmoZh = (code) => {
+      if (code === 0) return "晴";
+      if (code <= 3) return "少云 / 多云";
+      if (code <= 48) return "雾或霾";
+      if (code <= 57) return "毛毛雨 / 冻毛毛雨";
+      if (code <= 67) return "雨";
+      if (code <= 77) return "降雪或阵雨";
+      if (code <= 82) return "阵雨";
+      if (code <= 86) return "阵雪";
+      if (code <= 99) return "雷暴或强降水";
+      return "天气码 " + code;
+    };
+
+    const dayCardEmoji = (n) =>
+      ["✈️", "⛪", "🏖️", "🌴", "🏜️", "🎭", "🛫"][n - 1] || "📍";
+
+    const tabBarEmoji = (i) =>
+      ["✈️", "🛩️", "🏖️", "🌺", "🚙", "🌆", "👋"][i] || "📌";
+
+    function sectionHeadingWithEmoji(h) {
+      const m = {
+        行程: "✈️",
+        上午: "🌅",
+        下午: "🌤️",
+        午餐: "🍜",
+        晚间: "🌙",
+        清晨: "🌄",
+        说明: "📋",
+      };
+      return (m[h] || "📌") + " " + h;
+    }
+
+    const tipCityEmoji = { hanoi: "🏛️", nhatrang: "🏝️", muine: "🏜️", hcmc: "🌇" };
+
+    const cities = {
+      hanoi: { name: "河内", lat: 21.0285, lon: 105.8542 },
+      nhatrang: { name: "芽庄", lat: 12.2388, lon: 109.1967 },
+      muine: { name: "美奈", lat: 10.95, lon: 108.2833 },
+      hcmc: { name: "胡志明市", lat: 10.8231, lon: 106.6297 },
+    };
+
+    /** 与当日 wxKeys 对应，供底部「城市小知识」展开区使用 */
+    const cityTips = {
+      hanoi: {
+        title: "河内（Hà Nội）",
+        history:
+          "红河三角洲北部的千年都会，长期是越南各王朝的都城或陪都，皇城、文庙与寺庙林立；19 世纪末起受法国殖民影响，还剑湖周边形成「东南亚街巷 + 欧式立面」的混合街区。统一后仍是首都，政治与科教资源集中。",
+        features:
+          "三十六行街适合步行感受市井节奏；河粉、春卷、鸡蛋咖啡等常被视为越南味的代表；冬季略凉、雨季明显，整体节奏较南部从容。",
+      },
+      nhatrang: {
+        title: "芽庄（Nha Trang）",
+        history:
+          "中南部重要海港，历史上与占婆海洋王国关系密切，沿岸仍留有印度教风格的占婆塔（如婆那加塔）。近代以来渔业、航运与旅游并行，是越南最早一批大规模滨海度假开发的城市之一。",
+        features:
+          "海湾长、海水能见度较好，潜水与跳岛成熟；酒店与餐饮国际化程度高；老城与沙滩一线之隔，适合「看海 + 短途出海」。",
+      },
+      muine: {
+        title: "美奈（Mũi Né）",
+        history:
+          "通常指潘切市以东的沿海度假区，传统上以渔村、避风港与沿岸农作并存；近几十年因稳定风况与长滩，成长为风筝冲浪与高端度假村聚集地，沙丘与海岸公路成为标志性景观。",
+        features:
+          "白沙丘、红沙丘与渔村形成强烈视觉反差；沿海酒店带与本地渔业仅一路之隔；火龙果等热带种植在近郊很常见。",
+      },
+      hcmc: {
+        title: "胡志明市（Thành phố Hồ Chí Minh）",
+        history:
+          "湄公河三角洲的贸易枢纽，法国殖民时期为「交趾支那」中心，歌剧院、中央邮局、林荫大道构成「东方小巴黎」骨架；越战时期曾为南越政权首都，城市记忆多元。统一后改名胡志明市，至今仍是全国经济规模最大、国际化程度最高的都市。",
+        features:
+          "殖民建筑、摩天楼与巷弄小店高密度共存；咖啡、法棍与各国料理选择极多，夜生活活跃；交通繁忙，适合作为感受越南商业活力的窗口。",
+      },
+    };
+
+    const days = [
+      {
+        n: 1,
+        date: `${YEAR}-04-29`,
+        label: "4月29日 周二",
+        title: "上海 → 河内",
+        wxKeys: ["hanoi"],
+        blocks: [
+          { h: "行程", items: [
+            "航班 VN 533：浦东 15:50 — 河内 18:25",
+            "抵达后导游接机，送酒店",
+            "赠送：越南河粉套餐 + 当地小食；斗笠预计第4天发放",
+          ]},
+        ],
+        meals: "早：自理 · 午：自理 · 晚：河粉套餐",
+        hotel: "REY Hotel Hanoi",
+      },
+      {
+        n: 2,
+        date: `${YEAR}-04-30`,
+        label: "4月30日 周三",
+        title: "河内 → 芽庄",
+        wxKeys: ["hanoi", "nhatrang"],
+        blocks: [
+          { h: "上午", items: [
+            "圣约瑟夫大教堂（不少于 15 分钟）",
+            "河内老城自由活动（不少于 45 分钟）",
+          ]},
+          { h: "下午", items: [
+            "越航 VN1563：河内 16:30 — 芽庄 18:30",
+            "巴士送酒店",
+          ]},
+        ],
+        meals: "早：酒店 · 午：团队风味餐（约 7 USD 标准）· 晚：自理",
+        hotel: "Best Western Premier Marvella Nha Trang Hotel",
+      },
+      {
+        n: 3,
+        date: `${YEAR}-05-01`,
+        label: "5月1日 周四",
+        title: "芽庄（全天自由活动）",
+        wxKeys: ["nhatrang"],
+        blocks: [
+          { h: "说明", items: [
+            "全天自由活动，无导游、无车、无团队餐",
+          ]},
+        ],
+        meals: "早：酒店 · 午：自理 · 晚：自理",
+        hotel: "Best Western Premier Marvella Nha Trang Hotel",
+      },
+      {
+        n: 4,
+        date: `${YEAR}-05-02`,
+        label: "5月2日 周五",
+        title: "芽庄 → 美奈",
+        wxKeys: ["nhatrang", "muine"],
+        blocks: [
+          { h: "上午", items: [
+            "芽庄市区游",
+            "钟屿角 / 五指岩（不少于 40 分钟），赠送越南滴漏咖啡",
+            "婆那加占婆塔（不少于 40 分钟）",
+          ]},
+          { h: "午餐", items: ["Ngon Gallery 特色半自助（Tripadvisor 2024 旅行者之选）"] },
+          { h: "下午", items: [
+            "乘车前往美奈，入住酒店",
+            "Hanna Beach Club（含一杯软饮）",
+          ]},
+          { h: "晚间", items: ["晚餐自理"] },
+        ],
+        meals: "早：酒店 · 午：团队风味餐（约 14 USD 标准）· 晚：自理",
+        hotel: "Centara Mirage Resort Mui Ne",
+      },
+      {
+        n: 5,
+        date: `${YEAR}-05-03`,
+        label: "5月3日 周六",
+        title: "美奈",
+        wxKeys: ["muine"],
+        blocks: [
+          { h: "上午", items: ["自由活动"] },
+          { h: "下午", items: [
+            "白沙丘（不少于 30 分钟），含网红风吉普体验",
+            "途中火龙果采摘（视季节/天气；若无法安排则改为水果品尝），每人赠送 1 个火龙果",
+            "美奈渔村沿海路游览（不少于 15 分钟）",
+          ]},
+          { h: "晚间", items: ["返回酒店"] },
+        ],
+        meals: "早：酒店 · 午：自理 · 晚：自理",
+        hotel: "Centara Mirage Resort Mui Ne",
+      },
+      {
+        n: 6,
+        date: `${YEAR}-05-04`,
+        label: "5月4日 周日",
+        title: "美奈 → 胡志明市",
+        wxKeys: ["muine", "hcmc"],
+        blocks: [
+          { h: "上午", items: ["早餐后乘车前往胡志明市（「东方小巴黎」）"] },
+          { h: "午餐", items: ["特色海鲜自助欢送午宴"] },
+          { h: "下午", items: [
+            "统一宫（室内参观，不少于 20 分钟）",
+            "「情迷西贡」城市漫步（约 2 km，老少皆宜）",
+            "中央邮局（室内不少于 20 分钟），赠送明信片一张",
+            "胡志明市政厅、市立歌剧院（外观）",
+            "咖啡公寓（室内体验历史与现代融合）",
+            "粉红教堂 / 新定教堂（外观）",
+          ]},
+        ],
+        meals: "早：酒店 · 午：海鲜自助 · 晚：自理",
+        hotel: "T-Ritz Saigon Hotel & Apartment",
+      },
+      {
+        n: 7,
+        date: `${YEAR}-05-05`,
+        label: "5月5日 周一",
+        title: "胡志明市 → 上海",
+        wxKeys: ["hcmc"],
+        blocks: [
+          { h: "清晨", items: [
+            "打包早餐，送国际机场（行程文案若写「河内机场」应为笔误，实际为胡志明新山一机场）",
+            "航班 VN 524：07:20 起飞 — 12:40 抵达浦东（以最终出票为准）",
+          ]},
+        ],
+        meals: "早：打包早餐",
+        hotel: "—",
+      },
+    ];
+
+    const tripMapState = { map: null, overlay: null };
+
+    function initTripMap() {
+      if (typeof L === "undefined" || !document.getElementById("trip-map")) return;
+      const iconBase = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/";
+      delete L.Icon.Default.prototype._getIconUrl;
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl: iconBase + "marker-icon-2x.png",
+        iconUrl: iconBase + "marker-icon.png",
+        shadowUrl: iconBase + "marker-shadow.png",
+      });
+
+      const map = L.map("trip-map", { scrollWheelZoom: false });
+      L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+        {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+          subdomains: "abcd",
+          maxZoom: 19,
+        }
+      ).addTo(map);
+
+      tripMapState.map = map;
+      tripMapState.overlay = L.layerGroup().addTo(map);
+
+      map.on("click", () => {
+        if (!map.scrollWheelZoom.enabled()) map.scrollWheelZoom.enable();
+      });
+    }
+
+    function padBounds(lat, lon, delta) {
+      return L.latLngBounds([lat - delta, lon - delta], [lat + delta, lon + delta]);
+    }
+
+    function updateMapForDayIndex(idx) {
+      const d = days[idx];
+      const mapEl = document.getElementById("trip-map");
+      const ctx = document.getElementById("map-context");
+      if (ctx) {
+        ctx.textContent =
+          "📍 当前：Day " + d.n + " · " + d.label + " · " + d.wxKeys.map((k) => cities[k].name).join(" → ");
+      }
+      if (mapEl) {
+        mapEl.setAttribute(
+          "aria-label",
+          "Day " + d.n + " " + d.label + "：" + d.title + "，涉及 " + d.wxKeys.map((k) => cities[k].name).join("、")
+        );
+      }
+
+      if (!tripMapState.map || !tripMapState.overlay) return;
+      tripMapState.overlay.clearLayers();
+
+      const keys = d.wxKeys;
+      const latlngs = keys.map((k) => [cities[k].lat, cities[k].lon]);
+
+      if (latlngs.length > 1) {
+        L.polyline(latlngs, {
+          color: "#ff2d88",
+          weight: 4,
+          opacity: 0.92,
+          dashArray: "12 8",
+        }).addTo(tripMapState.overlay);
+      }
+
+      keys.forEach((k, i) => {
+        const c = cities[k];
+        const seq = keys.length > 1 ? i + 1 + ". " : "";
+        const html =
+          "<strong>" +
+          seq +
+          "📍 " +
+          c.name +
+          "</strong><br><span style=\"opacity:.9;font-size:12px\">Day " +
+          d.n +
+          " · " +
+          d.title +
+          " ✨</span>";
+        L.marker([c.lat, c.lon]).addTo(tripMapState.overlay).bindPopup(html);
+      });
+
+      let b;
+      if (latlngs.length === 1) {
+        b = padBounds(latlngs[0][0], latlngs[0][1], 0.09);
+      } else {
+        b = L.latLngBounds(latlngs);
+      }
+      tripMapState.map.fitBounds(b, {
+        padding: [36, 36],
+        maxZoom: latlngs.length === 1 ? 12 : 8,
+      });
+    }
+
+    let selectedDayIndex = 0;
+
+    function renderCityTips(dayIndex) {
+      const d = days[dayIndex];
+      const det = document.getElementById("city-tips");
+      const label = document.getElementById("city-tips-label");
+      const body = document.getElementById("city-tips-body");
+      if (!label || !body) return;
+
+      const wasOpen = det ? det.open : false;
+      const keys = d.wxKeys.filter((k, i, a) => a.indexOf(k) === i);
+
+      label.textContent =
+        "🧭 本日涉及：" + keys.map((k) => tipCityEmoji[k] + " " + cities[k].name).join(" · ");
+
+      body.innerHTML = keys
+        .map((k) => {
+          const t = cityTips[k];
+          if (!t) return "";
+          const ico = tipCityEmoji[k] || "📍";
+          return (
+            '<article class="tip-block">' +
+            "<h4>" +
+            ico +
+            " " +
+            t.title +
+            "</h4>" +
+            '<p><span class="k">📜 历史脉络</span>' +
+            t.history +
+            "</p>" +
+            '<p><span class="k">✨ 在地特色</span>' +
+            t.features +
+            "</p>" +
+            "</article>"
+          );
+        })
+        .join("");
+
+      if (det && wasOpen) det.open = true;
+    }
+
+    function selectDay(index) {
+      if (index < 0 || index >= days.length) return;
+      selectedDayIndex = index;
+
+      document.querySelectorAll(".day-tab").forEach((btn, i) => {
+        btn.setAttribute("aria-selected", i === index ? "true" : "false");
+      });
+      document.querySelectorAll(".day-panel").forEach((panel, i) => {
+        panel.classList.toggle("is-active", i === index);
+      });
+
+      updateMapForDayIndex(index);
+      renderCityTips(index);
+    }
+
+    async function fetchCityRange(key, start, end) {
+      const c = cities[key];
+      const u = new URL("https://api.open-meteo.com/v1/forecast");
+      u.searchParams.set("latitude", c.lat);
+      u.searchParams.set("longitude", c.lon);
+      u.searchParams.set("daily", "weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max");
+      u.searchParams.set("timezone", "Asia/Ho_Chi_Minh");
+      u.searchParams.set("start_date", start);
+      u.searchParams.set("end_date", end);
+      const r = await fetch(u.toString());
+      if (!r.ok) throw new Error(key);
+      const j = await r.json();
+      const map = {};
+      const t = j.daily.time;
+      for (let i = 0; i < t.length; i++) {
+        map[t[i]] = {
+          wmo: j.daily.weathercode[i],
+          max: j.daily.temperature_2m_max[i],
+          min: j.daily.temperature_2m_min[i],
+          pop: j.daily.precipitation_probability_max[i],
+        };
+      }
+      return map;
+    }
+
+    function renderWxEl(container, dateStr, wxKeys, cache) {
+      container.innerHTML = "";
+      wxKeys.forEach((k) => {
+        const el = document.createElement("span");
+        el.className = "wx loading";
+        el.textContent = "⏳ " + cities[k].name + "：加载中…";
+        container.appendChild(el);
+      });
+
+      wxKeys.forEach((el, idx) => {
+        const span = container.children[idx];
+        const row = cache[wxKeys[idx]] && cache[wxKeys[idx]][dateStr];
+        if (!row) {
+          span.className = "wx err";
+          span.textContent = "😅 " + cities[wxKeys[idx]].name + "：暂无数据";
+          return;
+        }
+        span.className = "wx";
+        span.innerHTML =
+          "🌤️ <strong>" + cities[wxKeys[idx]].name + "</strong> " +
+          wmoZh(row.wmo) +
+          " · " +
+          Math.round(row.min) + "–" + Math.round(row.max) + "°C" +
+          " · 降水概率 " + (row.pop != null ? row.pop : "—") + "%";
+      });
+    }
+
+    const start = days[0].date;
+    const end = days[days.length - 1].date;
+    const keys = [...new Set(days.flatMap((d) => d.wxKeys))];
+
+    const picker = document.getElementById("day-picker");
+    const root = document.getElementById("days");
+
+    const lbl = document.createElement("span");
+    lbl.className = "pick-label";
+    lbl.textContent = "📅 选择第几天";
+    picker.appendChild(lbl);
+
+    const tabRow = document.createElement("div");
+    tabRow.className = "day-tab-row";
+    tabRow.setAttribute("role", "tablist");
+    tabRow.setAttribute("aria-label", "七天行程切换");
+    picker.appendChild(tabRow);
+
+    days.forEach((d, i) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "day-tab";
+      btn.setAttribute("role", "tab");
+      btn.setAttribute("aria-selected", i === 0 ? "true" : "false");
+      btn.setAttribute("id", "day-tab-" + d.n);
+      btn.setAttribute("aria-controls", "day-panel-" + d.n);
+      btn.innerHTML =
+        '<span class="tab-ico" aria-hidden="true">' +
+        tabBarEmoji(i) +
+        "</span>" +
+        '<span class="tab-n">Day ' +
+        d.n +
+        "</span>" +
+        '<span class="tab-d">' +
+        d.label.replace(/^\d+月\d+日\s*/, "") +
+        "</span>";
+      btn.addEventListener("click", () => selectDay(i));
+      tabRow.appendChild(btn);
+    });
+
+    days.forEach((d, i) => {
+      const card = document.createElement("article");
+      card.className = "day day-panel" + (i === 0 ? " is-active" : "");
+      card.id = "day-panel-" + d.n;
+      card.setAttribute("role", "tabpanel");
+      card.setAttribute("aria-labelledby", "day-tab-" + d.n);
+      card.innerHTML =
+        '<div class="day-head">' +
+          '<span class="day-tag">Day ' +
+          d.n +
+          "</span>" +
+          '<span class="day-title"><span class="de" aria-hidden="true">' +
+          dayCardEmoji(d.n) +
+          "</span>" +
+          d.title +
+          "</span>" +
+          '<span class="day-date">' +
+          d.label +
+          "</span>" +
+        "</div>" +
+        '<div class="weather-row" data-date="' + d.date + '" data-keys="' + d.wxKeys.join(",") + '"></div>';
+
+      d.blocks.forEach((b) => {
+        const sec = document.createElement("section");
+        sec.innerHTML =
+          "<h3>" +
+          sectionHeadingWithEmoji(b.h) +
+          "</h3><ul>" +
+          b.items.map((x) => "<li>" + x + "</li>").join("") +
+          "</ul>";
+        card.appendChild(sec);
+      });
+
+      const meta = document.createElement("div");
+      meta.className = "meta";
+      meta.innerHTML =
+        "<div><b>🍽️ 餐饮</b> " + d.meals + "</div><div><b>🏨 住宿</b> " + d.hotel + "</div>";
+      card.appendChild(meta);
+
+      root.appendChild(card);
+    });
+
+    initTripMap();
+    selectDay(0);
+    requestAnimationFrame(function () {
+      if (tripMapState.map) tripMapState.map.invalidateSize();
+    });
+
+    (async () => {
+      const cache = {};
+      try {
+        await Promise.all(
+          keys.map(async (k) => {
+            cache[k] = await fetchCityRange(k, start, end);
+          })
+        );
+      } catch (e) {
+        document.querySelectorAll(".weather-row").forEach((row) => {
+          row.innerHTML = '<span class="wx err">📡 天气加载失败，请检查网络后刷新页面。</span>';
+        });
+        return;
+      }
+
+      document.querySelectorAll(".weather-row").forEach((row) => {
+        const dateStr = row.getAttribute("data-date");
+        const wxKeys = row.getAttribute("data-keys").split(",");
+        renderWxEl(row, dateStr, wxKeys, cache);
+      });
+    })();
+  </script>
+</body>
+</html>
