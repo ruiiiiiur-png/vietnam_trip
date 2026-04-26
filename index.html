@@ -663,7 +663,7 @@
       font-weight: 500;
     }
 
-    /* 手机端：更大触控区、行程攻略 Tab 横向滑动、短语表改为卡片堆叠 */
+    /* 手机端：更大触控区；Day1–7 换行两排免横滑；翻译短语三列表格（略宽时可横滑） */
     @media (max-width: 560px) {
       .wrap {
         padding: 1.1rem 0.85rem 2.5rem;
@@ -678,108 +678,59 @@
         border-radius: 12px;
       }
       .day-picker {
-        margin-left: -0.15rem;
-        margin-right: -0.15rem;
+        margin-left: 0;
+        margin-right: 0;
       }
+      /* 约 4+3 两排占满宽度，避免 Day 横滑 */
       .day-tab-row {
-        flex-wrap: nowrap;
-        justify-content: flex-start;
-        overflow-x: auto;
-        overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
-        scroll-snap-type: x proximity;
-        gap: 0.45rem;
-        padding: 0.15rem 0.15rem 0.45rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        row-gap: 0.42rem;
+        column-gap: 0.35rem;
+        padding: 0.12rem 0 0.4rem;
         margin: 0;
-        overscroll-behavior-x: contain;
-      }
-      .day-tab-row::-webkit-scrollbar {
-        height: 4px;
-      }
-      .day-tab-row::-webkit-scrollbar-thumb {
-        background: rgba(42, 143, 189, 0.35);
-        border-radius: 999px;
+        overflow-x: visible;
       }
       .day-tab {
-        flex: 0 0 auto;
-        scroll-snap-align: start;
-        min-width: 5.35rem;
-        max-width: 6.5rem;
-        padding: 0.52rem 0.45rem 0.48rem;
-        min-height: 3.35rem;
-        font-size: 0.78rem;
+        flex: 1 1 calc(25% - 0.3rem);
+        min-width: 0;
+        box-sizing: border-box;
+        padding: 0.45rem 0.2rem 0.42rem;
+        min-height: 3.1rem;
+        font-size: 0.74rem;
         border-radius: 12px;
       }
       .day-tab .tab-ico {
-        font-size: 1.05rem;
-        margin-bottom: 0.12rem;
+        font-size: 0.95rem;
+        margin-bottom: 0.1rem;
       }
       .day-tab .tab-n {
-        font-size: 0.72rem;
+        font-size: 0.68rem;
         white-space: nowrap;
       }
       .day-tab .tab-d {
-        font-size: 0.66rem;
-        margin-top: 0.1rem;
+        font-size: 0.6rem;
+        margin-top: 0.08rem;
       }
       .btn-copy-hotel {
         font-size: 0.72rem;
         padding: 0.32rem 0.6rem;
         min-height: 2.25rem;
       }
+      /* 翻译短语：每行一条，三列同排；表略宽于屏时整表横滑 */
       .more-table--phrases {
-        display: block;
-        width: 100%;
-      }
-      .more-table--phrases thead {
-        display: none;
-      }
-      .more-table--phrases tbody {
-        display: block;
-      }
-      .more-table--phrases tbody tr {
-        display: block;
-        border: 1px solid rgba(42, 143, 189, 0.2);
-        border-radius: 12px;
-        margin-bottom: 0.55rem;
-        padding: 0.5rem 0.65rem 0.55rem;
-        background: rgba(255, 255, 255, 0.75);
-      }
-      .more-table--phrases tbody tr:last-child {
-        margin-bottom: 0;
+        table-layout: fixed;
+        min-width: 17.5rem;
+        font-size: 0.76rem;
       }
       .more-table--phrases th,
       .more-table--phrases td {
-        display: block;
-        width: 100%;
-        border: 0;
-        padding: 0.25rem 0;
+        padding: 0.42rem 0.32rem;
+        vertical-align: middle;
       }
       .more-table--phrases td:first-child {
         font-weight: 700;
         color: var(--ocean-deep);
-        padding-top: 0;
-      }
-      .more-table--phrases td:nth-child(2) {
-        padding: 0.15rem 0 0.1rem;
-      }
-      .more-table--phrases td:nth-child(2)::before {
-        content: "越南语：";
-        font-size: 0.68rem;
-        font-weight: 700;
-        color: var(--muted);
-        letter-spacing: 0.04em;
-        display: block;
-        margin-bottom: 0.12rem;
-      }
-      .more-table--phrases td:nth-child(3)::before {
-        content: "读音参考：";
-        font-size: 0.68rem;
-        font-weight: 700;
-        color: var(--muted);
-        letter-spacing: 0.04em;
-        display: block;
-        margin-bottom: 0.12rem;
       }
     }
 
