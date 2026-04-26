@@ -72,11 +72,15 @@
       background-clip: text;
       color: transparent;
     }
-    header p {
+    header p.header-sub {
       margin: 0;
       color: var(--muted);
       font-size: 0.9rem;
       font-weight: 500;
+      line-height: 1.45;
+    }
+    header p.header-sub + p.header-sub {
+      margin-top: 0.3rem;
     }
     .flight-strip {
       display: grid;
@@ -496,6 +500,12 @@
       letter-spacing: 0.03em;
       white-space: nowrap;
     }
+    .day-tab .tab-day-prefix {
+      font-weight: 700;
+    }
+    .day-tab .tab-day-num {
+      font-weight: 700;
+    }
     .day-tab[aria-selected="true"] .tab-n,
     .day-tab[aria-selected="true"] .tab-d {
       color: #f5fcfd;
@@ -663,7 +673,7 @@
       font-weight: 500;
     }
 
-    /* 手机端：更大触控区；Day1–7 换行两排免横滑；翻译短语三列表格（略宽时可横滑） */
+    /* 手机端：更大触控区；Day1–7 单行均分无横滑（见 .tab-day-prefix）；翻译短语三列表格（略宽时可横滑） */
     @media (max-width: 560px) {
       .wrap {
         padding: 1.1rem 0.85rem 2.5rem;
@@ -681,36 +691,44 @@
         margin-left: 0;
         margin-right: 0;
       }
-      /* 约 4+3 两排占满宽度，避免 Day 横滑 */
+      /* Day1–7：单行七格均分，无横滑；窄屏隐藏「Day 」与 emoji，仅数字+星期 */
       .day-tab-row {
-        flex-wrap: wrap;
-        justify-content: center;
-        row-gap: 0.42rem;
-        column-gap: 0.35rem;
-        padding: 0.12rem 0 0.4rem;
+        flex-wrap: nowrap;
+        justify-content: stretch;
+        gap: 0.2rem;
+        padding: 0.1rem 0 0.35rem;
         margin: 0;
-        overflow-x: visible;
+        overflow: visible;
       }
       .day-tab {
-        flex: 1 1 calc(25% - 0.3rem);
+        flex: 1 1 0;
         min-width: 0;
         box-sizing: border-box;
-        padding: 0.45rem 0.2rem 0.42rem;
-        min-height: 3.1rem;
-        font-size: 0.74rem;
-        border-radius: 12px;
+        padding: 0.34rem 0.08rem 0.32rem;
+        min-height: 2.65rem;
+        font-size: 0.62rem;
+        border-radius: 9px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
       }
       .day-tab .tab-ico {
-        font-size: 0.95rem;
-        margin-bottom: 0.1rem;
+        display: none;
+      }
+      .day-tab .tab-day-prefix {
+        display: none;
       }
       .day-tab .tab-n {
-        font-size: 0.68rem;
-        white-space: nowrap;
+        font-size: clamp(0.58rem, 3.1vw, 0.72rem);
+        line-height: 1.15;
       }
       .day-tab .tab-d {
-        font-size: 0.6rem;
-        margin-top: 0.08rem;
+        font-size: clamp(0.48rem, 2.6vw, 0.62rem);
+        margin-top: 0.06rem;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .btn-copy-hotel {
         font-size: 0.72rem;
@@ -747,7 +765,8 @@
   <div class="wrap">
     <header>
       <h1>🇻🇳🌴 越南七天六晚行程 ✈️</h1>
-      <p>🗓️ 2026年4月29日（周二）— 5月5日（周一）· 🏛️河内 · 🏝️芽庄 · 🏜️美奈 · 🌇胡志明市</p>
+      <p class="header-sub">🗓️ 2026年4月29日（周二）— 5月5日（周一）</p>
+      <p class="header-sub">🏛️河内 · 🏝️芽庄 · 🏜️美奈 · 🌇胡志明市</p>
       <div class="flight-strip">
         <div>🛫 去程：<span>VN 533</span> 上海浦东 15:50 → 河内 18:25</div>
         <div>🛬 回程：<span>VN 524</span> 胡志明新山一 07:20 → 上海浦东 12:40</div>
@@ -1501,13 +1520,17 @@
       btn.setAttribute("aria-selected", i === 0 ? "true" : "false");
       btn.setAttribute("id", "day-tab-" + d.n);
       btn.setAttribute("aria-controls", "day-panel-" + d.n);
+      btn.setAttribute(
+        "aria-label",
+        "第" + d.n + "天，" + d.label + "，" + d.title
+      );
       btn.innerHTML =
         '<span class="tab-ico" aria-hidden="true">' +
         tabBarEmoji(i) +
         "</span>" +
-        '<span class="tab-n">Day ' +
+        '<span class="tab-n"><span class="tab-day-prefix">Day </span><span class="tab-day-num">' +
         d.n +
-        "</span>" +
+        "</span></span>" +
         '<span class="tab-d">' +
         d.label.replace(/^\d+月\d+日\s*/, "") +
         "</span>";
