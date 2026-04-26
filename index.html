@@ -9,38 +9,38 @@
   <link rel="preconnect" href="https://a.basemaps.cartocdn.com" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" crossorigin="anonymous" />
   <style>
+    /* 配色：薄荷海风（清爽海洋）— 海蓝、薄荷青、浪白、沙灰 */
     :root {
-      --sun: #ffc93c;
-      --coral: #ff6b4a;
-      --magenta: #ff2d88;
-      --pool: #00c9bf;
-      --lime: #c4f000;
-      --papaya: #fff0e5;
-      --surf: #e8fff8;
-      --orchid: #ffe0f0;
-      --text: #2d1f3d;
-      --muted: #6b5a7a;
-      --card: rgba(255, 255, 255, 0.94);
-      --border: rgba(255, 107, 74, 0.28);
-      --glow-coral: 0 12px 36px rgba(255, 107, 74, 0.2);
-      --glow-pool: 0 8px 28px rgba(0, 201, 191, 0.18);
+      --text: #143a4a;
+      --muted: #5a7d8c;
+      --ocean: #2a8fbd;
+      --ocean-deep: #1a6a94;
+      --mint: #4db6ac;
+      --mint-light: #b2dfdb;
+      --foam: #f0fbfc;
+      --surf: #e3f4fb;
+      --sand: #f7fafb;
+      --card: rgba(255, 255, 255, 0.97);
+      --border: rgba(42, 143, 189, 0.26);
+      --border-mint: rgba(77, 182, 172, 0.35);
+      --shadow: 0 10px 36px rgba(20, 58, 74, 0.08);
+      --font-main: "Noto Sans SC", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: "Nunito", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-family: var(--font-main);
       color: var(--text);
-      line-height: 1.55;
+      line-height: 1.58;
       min-height: 100vh;
       background:
-        radial-gradient(120% 55% at -5% -15%, rgba(255, 201, 60, 0.55), transparent 52%),
-        radial-gradient(90% 50% at 105% 5%, rgba(255, 45, 136, 0.38), transparent 48%),
-        radial-gradient(80% 45% at 50% 110%, rgba(0, 201, 191, 0.35), transparent 55%),
-        radial-gradient(60% 40% at 0% 80%, rgba(196, 240, 0, 0.22), transparent 45%),
-        linear-gradient(168deg, #fff9f2 0%, #fff5fb 38%, #f2fffc 100%);
+        radial-gradient(100% 60% at 0% 0%, rgba(77, 182, 172, 0.2), transparent 52%),
+        radial-gradient(90% 55% at 100% 0%, rgba(42, 143, 189, 0.16), transparent 48%),
+        radial-gradient(75% 50% at 50% 100%, rgba(227, 244, 251, 0.9), transparent 55%),
+        linear-gradient(180deg, #f5fcfd 0%, #eef8fb 45%, #e8f4f8 100%);
       background-attachment: fixed;
     }
     .wrap {
@@ -51,18 +51,18 @@
     header {
       margin-bottom: 1.35rem;
       padding: 1rem 1.1rem 1.15rem;
-      border-radius: 20px;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 240, 250, 0.88) 100%);
-      border: 2px solid rgba(255, 201, 60, 0.45);
-      box-shadow: var(--glow-coral), var(--glow-pool);
+      border-radius: 16px;
+      background: linear-gradient(150deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 251, 252, 0.95) 100%);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
     }
     header h1 {
-      font-size: 1.5rem;
-      font-weight: 800;
+      font-size: 1.45rem;
+      font-weight: 700;
       margin: 0 0 0.4rem;
-      letter-spacing: 0.02em;
-      line-height: 1.2;
-      background: linear-gradient(105deg, #ff2d88 0%, #ff6b4a 40%, #ffc93c 85%);
+      letter-spacing: 0.03em;
+      line-height: 1.35;
+      background: linear-gradient(105deg, #1a6a94 0%, #2a8fbd 45%, #4db6ac 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -70,29 +70,135 @@
     header p {
       margin: 0;
       color: var(--muted);
-      font-size: 0.92rem;
-      font-weight: 600;
+      font-size: 0.9rem;
+      font-weight: 500;
     }
     .flight-strip {
       display: grid;
       gap: 0.45rem;
       margin-top: 0.85rem;
-      font-size: 0.84rem;
-      font-weight: 600;
+      font-size: 0.83rem;
+      font-weight: 500;
       color: var(--text);
     }
     .flight-strip span {
-      color: #e0006f;
-      font-weight: 800;
+      color: var(--ocean-deep);
+      font-weight: 700;
+    }
+    .app-tabs {
+      margin-bottom: 1rem;
+    }
+    .app-tab-row {
+      display: flex;
+      gap: 0.4rem;
+      width: 100%;
+    }
+    .app-tab {
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 0.55rem 0.35rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--text);
+      font-size: clamp(0.78rem, 2.2vw, 0.88rem);
+      font-family: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      line-height: 1.25;
+      text-align: center;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    }
+    .app-tab:hover {
+      border-color: var(--mint);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(42, 143, 189, 0.12);
+    }
+    .app-tab[aria-selected="true"] {
+      border-color: rgba(26, 106, 148, 0.35);
+      background: linear-gradient(145deg, #1a6a94 0%, #2a8fbd 50%, #4db6ac 100%);
+      color: #f5fcfd;
+      box-shadow: 0 6px 20px rgba(26, 106, 148, 0.22);
+    }
+    .app-panel > .map-card:first-child {
+      margin-top: 0;
+    }
+    .app-more-card .app-more-lead {
+      margin-top: 0.35rem;
+    }
+    .more-table-wrap {
+      overflow-x: auto;
+      margin-top: 0.35rem;
+      -webkit-overflow-scrolling: touch;
+    }
+    .more-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .more-table th,
+    .more-table td {
+      border-bottom: 1px solid rgba(42, 143, 189, 0.18);
+      padding: 0.45rem 0.4rem;
+      text-align: left;
+      vertical-align: top;
+      line-height: 1.45;
+    }
+    .more-table--phones tbody th {
+      color: var(--ocean-deep);
+      font-weight: 700;
+      white-space: nowrap;
+      width: 7.5rem;
+    }
+    .more-table--phrases thead th {
+      color: var(--ocean-deep);
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+    }
+    .more-table--phrases th,
+    .more-table--phrases td {
+      width: 33%;
+    }
+    .more-table--phrases .vn {
+      word-break: break-word;
+    }
+    .more-table td a {
+      color: var(--ocean);
+      font-weight: 600;
+      text-decoration: none;
+      word-break: break-all;
+    }
+    .more-table td a:hover {
+      text-decoration: underline;
+    }
+    .more-table .vn {
+      font-weight: 600;
+      color: var(--ocean-deep);
+    }
+    .more-table .hint {
+      font-size: 0.74rem;
+      color: var(--muted);
+      font-weight: 500;
+      display: block;
+      margin-top: 0.15rem;
+    }
+    .more-foot {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin: 0.55rem 0 0;
+      line-height: 1.45;
+      font-weight: 500;
     }
     .day {
       background: var(--card);
-      border: 2px solid var(--border);
-      border-radius: 20px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
       padding: 1.05rem 1.15rem;
       margin-bottom: 0.9rem;
-      box-shadow: 0 4px 20px rgba(255, 107, 74, 0.08);
-      backdrop-filter: blur(8px);
+      box-shadow: var(--shadow);
     }
     .day-head {
       display: flex;
@@ -102,60 +208,91 @@
       margin-bottom: 0.65rem;
     }
     .day-tag {
-      font-size: 0.72rem;
-      font-weight: 800;
+      font-size: 0.68rem;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       color: #fff;
-      background: linear-gradient(90deg, var(--pool), #00e5c5);
-      padding: 0.2rem 0.5rem;
+      background: linear-gradient(120deg, var(--ocean-deep), var(--mint));
+      padding: 0.22rem 0.55rem;
       border-radius: 999px;
-      box-shadow: 0 2px 10px rgba(0, 201, 191, 0.35);
+      box-shadow: 0 2px 10px rgba(26, 106, 148, 0.22);
     }
     .day-title {
-      font-size: 1.08rem;
-      font-weight: 800;
+      font-size: 1.05rem;
+      font-weight: 700;
     }
     .day-date {
-      font-size: 0.86rem;
+      font-size: 0.85rem;
       color: var(--muted);
-      font-weight: 600;
+      font-weight: 500;
     }
     .weather-row {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
       margin-bottom: 0.75rem;
+      align-items: flex-start;
+    }
+    .weather-row .wx-fetched-at {
+      flex: 1 0 100%;
+      width: 100%;
+      font-size: 0.68rem;
+      color: var(--muted);
+      font-weight: 500;
+      margin: 0.1rem 0 0;
+      line-height: 1.45;
     }
     .wx {
-      font-size: 0.8rem;
-      font-weight: 600;
-      background: linear-gradient(135deg, rgba(0, 201, 191, 0.15), rgba(255, 201, 60, 0.2));
-      border: 2px solid rgba(0, 201, 191, 0.35);
-      border-radius: 12px;
-      padding: 0.4rem 0.65rem;
-      color: #0a6b63;
+      font-size: 0.78rem;
+      font-weight: 500;
+      background: linear-gradient(135deg, rgba(77, 182, 172, 0.14), rgba(227, 244, 251, 0.9));
+      border: 1px solid var(--border-mint);
+      border-radius: 10px;
+      padding: 0.38rem 0.6rem;
+      color: var(--ocean-deep);
     }
     .wx.loading {
       color: var(--muted);
       border-style: dashed;
-      background: rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.85);
     }
     .wx.err {
-      border-color: rgba(255, 107, 74, 0.55);
-      color: #c43a1a;
-      background: rgba(255, 240, 230, 0.9);
+      border-color: rgba(42, 143, 189, 0.4);
+      color: #8b4a52;
+      background: rgba(255, 245, 245, 0.92);
     }
     .wx strong {
-      color: #e0006f;
+      color: var(--ocean);
     }
-    section h3 {
-      font-size: 0.74rem;
-      text-transform: uppercase;
+    .day section h3 {
+      font-family: var(--font-main);
+      font-size: 0.72rem;
       letter-spacing: 0.1em;
-      color: #e0006f;
+      color: var(--ocean-deep);
       margin: 0.65rem 0 0.28rem;
-      font-weight: 800;
+      font-weight: 700;
+    }
+    .day section.free-suggest {
+      margin-top: 0.55rem;
+      padding: 0.75rem 0.95rem 0.85rem;
+      border-radius: 12px;
+      border: 1px dashed rgba(77, 182, 172, 0.55);
+      background: linear-gradient(155deg, rgba(77, 182, 172, 0.1), rgba(227, 244, 251, 0.65));
+    }
+    .day section.free-suggest > h3 {
+      margin-top: 0;
+    }
+    .free-suggest-intro {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin: 0 0 0.45rem;
+      line-height: 1.5;
+      font-weight: 500;
+    }
+    .free-suggest li strong {
+      color: var(--ocean-deep);
+      font-weight: 700;
     }
     ul {
       margin: 0;
@@ -163,69 +300,103 @@
     }
     li {
       margin: 0.22rem 0;
-      font-weight: 600;
+      font-weight: 500;
     }
     .meta {
-      font-size: 0.88rem;
-      color: #55486a;
+      font-size: 0.86rem;
+      color: var(--muted);
       margin-top: 0.55rem;
-      font-weight: 600;
+      font-weight: 500;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
     }
     .meta b {
-      color: #00a89a;
-      font-weight: 800;
+      color: var(--ocean);
+      font-weight: 700;
+    }
+    .meta-hotel {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem 0.5rem;
+    }
+    .meta-hotel-name {
+      color: var(--muted);
+      font-weight: 500;
+      flex: 1 1 12rem;
+      min-width: 0;
+    }
+    .btn-copy-hotel {
+      font-family: inherit;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.22rem 0.5rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-mint);
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--ocean-deep);
+      cursor: pointer;
+      line-height: 1.2;
+    }
+    .btn-copy-hotel:hover {
+      border-color: var(--ocean);
+      color: var(--ocean);
+    }
+    .btn-copy-hotel:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(77, 182, 172, 0.35);
     }
     footer {
       margin-top: 1.5rem;
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       color: var(--muted);
-      font-weight: 600;
+      font-weight: 500;
     }
     footer a {
-      color: #e0006f;
-      font-weight: 700;
+      color: var(--ocean-deep);
+      font-weight: 600;
     }
     .map-card {
-      background: linear-gradient(160deg, rgba(255, 255, 255, 0.95) 0%, rgba(232, 255, 248, 0.9) 100%);
-      border: 2px solid rgba(0, 201, 191, 0.35);
-      border-radius: 20px;
+      background: linear-gradient(165deg, rgba(255, 255, 255, 0.98) 0%, rgba(227, 244, 251, 0.85) 100%);
+      border: 1px solid var(--border);
+      border-radius: 14px;
       padding: 0.85rem 0.85rem 0.75rem;
       margin-top: 1.15rem;
       margin-bottom: 1rem;
-      box-shadow: var(--glow-pool);
+      box-shadow: var(--shadow);
     }
     .map-card h2 {
-      font-size: 0.74rem;
-      text-transform: uppercase;
+      font-size: 0.72rem;
       letter-spacing: 0.12em;
-      color: #00a89a;
+      color: var(--ocean-deep);
       margin: 0 0 0.55rem;
-      font-weight: 800;
+      font-weight: 700;
     }
     #trip-map {
       height: min(42vh, 320px);
       min-height: 220px;
       width: 100%;
-      border-radius: 16px;
-      border: 3px solid rgba(255, 201, 60, 0.55);
+      border-radius: 12px;
+      border: 1px solid rgba(77, 182, 172, 0.4);
       z-index: 0;
-      box-shadow: 0 6px 24px rgba(255, 107, 74, 0.12);
+      box-shadow: 0 4px 18px rgba(26, 106, 148, 0.08);
     }
     .map-card .map-note {
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       color: var(--muted);
       margin: 0.5rem 0 0;
-      line-height: 1.45;
-      font-weight: 600;
+      line-height: 1.5;
+      font-weight: 500;
     }
     #map-context {
-      font-weight: 700;
-      color: #c2185c;
+      font-weight: 600;
+      color: var(--ocean);
     }
     .leaflet-popup-content-wrapper {
-      border-radius: 12px;
-      font-family: "Nunito", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-      box-shadow: 0 8px 28px rgba(255, 45, 136, 0.2);
+      border-radius: 10px;
+      font-family: var(--font-main);
+      box-shadow: 0 6px 22px rgba(26, 106, 148, 0.12);
     }
     .day-picker {
       display: flex;
@@ -239,61 +410,52 @@
       gap: 0.3rem;
       width: 100%;
     }
-    .day-picker .pick-label {
-      width: 100%;
-      font-size: 0.74rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: #e0006f;
-      font-weight: 800;
-      margin: 0 0 0.1rem;
-    }
     .day-tab {
       flex: 1 1 0;
       min-width: 0;
       padding: 0.42rem 0.15rem;
-      border: 2px solid rgba(255, 107, 74, 0.35);
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.92);
       color: var(--text);
-      font-size: clamp(0.62rem, 1.8vw, 0.76rem);
+      font-size: clamp(0.62rem, 1.8vw, 0.74rem);
       font-family: inherit;
-      font-weight: 700;
+      font-weight: 600;
       cursor: pointer;
       line-height: 1.2;
       text-align: center;
       transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
     }
     .day-tab:hover {
-      border-color: var(--magenta);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(255, 45, 136, 0.2);
+      border-color: var(--mint);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(42, 143, 189, 0.12);
     }
     .day-tab[aria-selected="true"] {
-      border-color: transparent;
-      background: linear-gradient(135deg, #ff2d88 0%, #ff6b4a 50%, #ffc93c 100%);
-      color: #fff;
-      box-shadow: 0 8px 26px rgba(255, 45, 136, 0.45);
+      border-color: rgba(26, 106, 148, 0.35);
+      background: linear-gradient(145deg, #1a6a94 0%, #2a8fbd 50%, #4db6ac 100%);
+      color: #f5fcfd;
+      box-shadow: 0 6px 20px rgba(26, 106, 148, 0.25);
       transform: translateY(-1px);
     }
     .day-tab .tab-n {
       display: block;
-      font-weight: 800;
-      color: #00a89a;
-      font-size: clamp(0.58rem, 1.6vw, 0.68rem);
-      letter-spacing: 0.02em;
+      font-weight: 700;
+      color: var(--ocean-deep);
+      font-size: clamp(0.58rem, 1.6vw, 0.66rem);
+      letter-spacing: 0.03em;
       white-space: nowrap;
     }
     .day-tab[aria-selected="true"] .tab-n,
     .day-tab[aria-selected="true"] .tab-d {
-      color: #fff;
+      color: #f5fcfd;
     }
     .day-tab .tab-d {
       display: block;
-      font-size: clamp(0.55rem, 1.5vw, 0.65rem);
+      font-size: clamp(0.55rem, 1.5vw, 0.64rem);
       color: var(--muted);
       margin-top: 0.08rem;
-      font-weight: 700;
+      font-weight: 500;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -314,12 +476,12 @@
       display: block;
     }
     .city-tips {
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 224, 240, 0.5) 100%);
-      border: 2px solid rgba(255, 45, 136, 0.28);
-      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(232, 248, 250, 0.88) 100%);
+      border: 1px solid var(--border);
+      border-radius: 14px;
       margin-top: 1rem;
       overflow: hidden;
-      box-shadow: 0 6px 28px rgba(255, 45, 136, 0.1);
+      box-shadow: var(--shadow);
     }
     .city-tips > summary {
       list-style: none;
@@ -327,31 +489,32 @@
       padding: 0.85rem 2.2rem 0.85rem 1.05rem;
       position: relative;
       user-select: none;
-      border-bottom: 2px solid transparent;
+      border-bottom: 1px solid transparent;
+      font-family: var(--font-main);
     }
     .city-tips > summary::-webkit-details-marker {
       display: none;
     }
     .city-tips[open] > summary {
-      border-bottom-color: rgba(255, 107, 74, 0.2);
+      border-bottom-color: rgba(77, 182, 172, 0.25);
     }
     .city-tips > summary:hover {
-      background: rgba(255, 201, 60, 0.15);
+      background: rgba(227, 244, 251, 0.55);
     }
     .city-tips-summary .st {
-      font-weight: 800;
-      font-size: 1rem;
-      background: linear-gradient(90deg, #ff2d88, #ff6b4a);
+      font-weight: 700;
+      font-size: 0.98rem;
+      background: linear-gradient(95deg, #1a6a94 0%, #4db6ac 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
     }
     .city-tips-summary .sub {
-      font-size: 0.84rem;
+      font-size: 0.82rem;
       color: var(--muted);
       display: block;
       margin-top: 0.25rem;
-      font-weight: 700;
+      font-weight: 500;
     }
     .city-tips-summary::after {
       content: "▼";
@@ -360,22 +523,24 @@
       top: 50%;
       margin-top: -0.35em;
       font-size: 0.55rem;
-      color: #ff2d88;
-      font-weight: 800;
+      color: var(--ocean);
+      font-weight: 700;
       transition: transform 0.2s;
     }
     .city-tips[open] > summary::after {
       transform: rotate(-180deg);
     }
     .city-tips-body {
+      font-family: var(--font-main);
       padding: 0.7rem 1.05rem 1.05rem;
-      font-size: 0.89rem;
-      color: #55486a;
-      font-weight: 600;
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-weight: 500;
     }
     .tip-block {
+      font-family: var(--font-main);
       padding: 0.55rem 0;
-      border-top: 2px dashed rgba(255, 107, 74, 0.22);
+      border-top: 1px dashed rgba(77, 182, 172, 0.28);
     }
     .tip-block:first-child {
       border-top: 0;
@@ -383,9 +548,9 @@
     }
     .tip-block h4 {
       margin: 0 0 0.4rem;
-      font-size: 0.95rem;
-      color: #00a89a;
-      font-weight: 800;
+      font-size: 0.93rem;
+      color: var(--ocean-deep);
+      font-weight: 700;
     }
     .tip-block p {
       margin: 0 0 0.45rem;
@@ -394,13 +559,58 @@
       margin-bottom: 0;
     }
     .tip-block .k {
-      color: #ff2d88;
-      font-size: 0.72rem;
-      font-weight: 800;
+      color: var(--ocean);
+      font-size: 0.7rem;
+      font-weight: 700;
       letter-spacing: 0.08em;
-      text-transform: uppercase;
       display: block;
       margin-bottom: 0.22rem;
+    }
+    .fx-tool .fx-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .fx-tool .fx-row {
+      display: grid;
+      gap: 0.35rem;
+    }
+    .fx-tool .fx-row label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--ocean-deep);
+    }
+    .fx-tool .fx-row input {
+      width: 100%;
+      padding: 0.5rem 0.65rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.95);
+    }
+    .fx-tool .fx-row input:focus {
+      outline: none;
+      border-color: var(--mint);
+      box-shadow: 0 0 0 3px rgba(77, 182, 172, 0.22);
+    }
+    .fx-tool .fx-out {
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--ocean);
+      min-height: 1.35em;
+    }
+    .fx-tool .fx-out[aria-busy="true"] {
+      color: var(--muted);
+    }
+    .fx-tool .fx-disclaimer {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin: 0.55rem 0 0;
+      line-height: 1.45;
+      font-weight: 500;
     }
   </style>
 </head>
@@ -411,28 +621,215 @@
       <p>🗓️ 2026年4月29日（周二）— 5月5日（周一）· 🏛️河内 · 🏝️芽庄 · 🏜️美奈 · 🌇胡志明市</p>
       <div class="flight-strip">
         <div>🛫 去程：<span>VN 533</span> 上海浦东 15:50 → 河内 18:25（4月29日）</div>
-        <div>🛬 回程：<span>VN 524</span> 胡志明新山一 07:20 → 上海浦东 12:40（5月5日，以出票为准）</div>
+        <div>🛬 回程：<span>VN 524</span> 胡志明新山一 07:20 → 上海浦东 12:40（5月5日）</div>
       </div>
     </header>
 
-    <nav class="day-picker" id="day-picker" aria-label="选择行程日"></nav>
+    <div class="app-tabs">
+      <div class="app-tab-row" role="tablist" aria-label="日程与实用工具">
+        <button type="button" class="app-tab" role="tab" id="app-tab-trip" aria-controls="app-panel-trip" aria-selected="true">
+          📅 日程
+        </button>
+        <button type="button" class="app-tab" role="tab" id="app-tab-tools" aria-controls="app-panel-tools" aria-selected="false">
+          🛠️ 实用工具
+        </button>
+      </div>
+    </div>
 
-    <div id="days"></div>
+    <div class="app-panel" id="app-panel-trip" role="tabpanel" aria-labelledby="app-tab-trip">
+      <nav class="day-picker" id="day-picker" aria-label="选择行程日"></nav>
 
-    <details class="city-tips" id="city-tips" open>
-      <summary class="city-tips-summary">
-        <span class="st">📚 城市小知识</span>
-        <span class="sub" id="city-tips-label"></span>
-      </summary>
-      <div class="city-tips-body" id="city-tips-body"></div>
-    </details>
+      <div id="days"></div>
 
-    <section class="map-card" aria-label="行程地图">
-      <h2>🗺️ 行程地图</h2>
-      <div id="trip-map" role="img" aria-label="行程地图"></div>
-      <p class="map-note" id="map-context"></p>
-      <p class="map-note">🧭 标注为大致市中心，便于看动线；酒店与景点请再结合导航精确定位。</p>
-    </section>
+      <details class="city-tips" id="city-tips" open>
+        <summary class="city-tips-summary">
+          <span class="st">📚 城市小知识</span>
+          <span class="sub" id="city-tips-label"></span>
+        </summary>
+        <div class="city-tips-body" id="city-tips-body"></div>
+      </details>
+
+      <section class="map-card" aria-label="行程地图">
+        <h2>🗺️ 行程地图</h2>
+        <div id="trip-map" role="img" aria-label="行程地图"></div>
+        <p class="map-note" id="map-context"></p>
+        <p class="map-note">🧭 标注为大致市中心，便于看动线；酒店与景点请再结合导航精确定位。</p>
+      </section>
+    </div>
+
+    <div class="app-panel" id="app-panel-tools" role="tabpanel" aria-labelledby="app-tab-tools" hidden>
+      <section class="map-card fx-tool app-more-card" data-fx-vnd-per-cny="3560" aria-label="人民币与越南盾换算">
+        <h2>💱 简易汇率</h2>
+        <div class="fx-rows">
+          <div class="fx-row">
+            <label for="fx-cny-in">人民币 (CNY)</label>
+            <input id="fx-cny-in" type="text" inputmode="decimal" placeholder="例如 100" autocomplete="off" />
+            <div class="fx-out" id="fx-vnd-from-cny" aria-live="polite">≈ — 越南盾 (VND)</div>
+          </div>
+          <div class="fx-row">
+            <label for="fx-vnd-in">越南盾 (VND)</label>
+            <input id="fx-vnd-in" type="text" inputmode="decimal" placeholder="例如 100000" autocomplete="off" />
+            <div class="fx-out" id="fx-cny-from-vnd" aria-live="polite">≈ — 人民币 (CNY)</div>
+          </div>
+        </div>
+        <p class="fx-disclaimer" id="fx-rate-note"></p>
+      </section>
+
+      <section class="map-card app-more-card" aria-label="翻译短语">
+        <h2>💬 翻译短语</h2>
+        <p class="map-note app-more-lead">中文意译 + 越南语原文；读音栏为近似拉丁读法，仅助记忆，以当地人发音为准。</p>
+        <div class="more-table-wrap">
+          <table class="more-table more-table--phrases">
+            <thead>
+              <tr>
+                <th scope="col">中文</th>
+                <th scope="col">越南语</th>
+                <th scope="col">读音参考</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>你好</td>
+                <td class="vn">Xin chào</td>
+                <td><span class="hint">sin 兆</span></td>
+              </tr>
+              <tr>
+                <td>谢谢</td>
+                <td class="vn">Cảm ơn</td>
+                <td><span class="hint">感 恩</span></td>
+              </tr>
+              <tr>
+                <td>对不起</td>
+                <td class="vn">Xin lỗi</td>
+                <td><span class="hint">sin 洛依</span></td>
+              </tr>
+              <tr>
+                <td>多少钱？</td>
+                <td class="vn">Bao nhiêu tiền?</td>
+                <td><span class="hint">包 尼优 田？</span></td>
+              </tr>
+              <tr>
+                <td>请结账</td>
+                <td class="vn">Tính tiền</td>
+                <td><span class="hint">挺 田</span></td>
+              </tr>
+              <tr>
+                <td>不要辣 / 少辣</td>
+                <td class="vn">Không cay / Ít cay</td>
+                <td><span class="hint">空 该 / 一特 该</span></td>
+              </tr>
+              <tr>
+                <td>不要香菜</td>
+                <td class="vn">Không rau mùi</td>
+                <td><span class="hint">空 饶 木依</span></td>
+              </tr>
+              <tr>
+                <td>厕所在哪里？</td>
+                <td class="vn">Nhà vệ sinh ở đâu?</td>
+                <td><span class="hint">尼亚 卫 辛 哦 兜？</span></td>
+              </tr>
+              <tr>
+                <td>我不会说越南语</td>
+                <td class="vn">Tôi không nói được tiếng Việt.</td>
+                <td><span class="hint">托依 空 诺依 得克 听 越</span></td>
+              </tr>
+              <tr>
+                <td>请说慢一点</td>
+                <td class="vn">Nói chậm lại, làm ơn.</td>
+                <td><span class="hint">诺依 扎姆 拉依，拉姆 恩</span></td>
+              </tr>
+              <tr>
+                <td>这个要一个</td>
+                <td class="vn">Cho tôi cái này.</td>
+                <td><span class="hint">绰 托依 该 内</span></td>
+              </tr>
+              <tr>
+                <td>好吃</td>
+                <td class="vn">Ngon!</td>
+                <td><span class="hint">昂（鼻音）嗯</span></td>
+              </tr>
+              <tr>
+                <td>冰水 / 常温水</td>
+                <td class="vn">Nước đá / Nước không đá</td>
+                <td><span class="hint">讷克 达 / 讷克 空 达</span></td>
+              </tr>
+              <tr>
+                <td>打包带走</td>
+                <td class="vn">Mang đi / mang về</td>
+                <td><span class="hint">忙 依 / 忙 维</span></td>
+              </tr>
+              <tr>
+                <td>在这里吃</td>
+                <td class="vn">Ăn tại chỗ</td>
+                <td><span class="hint">安 泰 绰</span></td>
+              </tr>
+              <tr>
+                <td>救命！帮帮我</td>
+                <td class="vn">Cứu tôi! Giúp tôi!</td>
+                <td><span class="hint">久 托依！ 优普 托依！</span></td>
+              </tr>
+              <tr>
+                <td>打 Grab 去这里</td>
+                <td class="vn">Grab đến đây / đến chỗ này</td>
+                <td><span class="hint">Grab 登 内 / 登 绰 内</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="more-foot">点餐可把手机给对方看字；越南语声调多，听不清就多用「Nói chậm lại, làm ơn」请对方慢说。</p>
+      </section>
+
+      <section class="map-card app-more-card" aria-label="常用电话">
+        <h2>📞 常用电话</h2>
+        <p class="map-note app-more-lead">遇紧急情况优先拨打当地急救/报警；中国公民可同步联系领事保护热线。号码出行前建议在使馆官网再核对一次。</p>
+        <div class="more-table-wrap">
+          <table class="more-table more-table--phones">
+            <tbody>
+              <tr>
+                <th scope="row">越南报警</th>
+                <td><a href="tel:113">113</a></td>
+              </tr>
+              <tr>
+                <th scope="row">急救 / 救护车</th>
+                <td><a href="tel:115">115</a></td>
+              </tr>
+              <tr>
+                <th scope="row">火警</th>
+                <td><a href="tel:114">114</a></td>
+              </tr>
+              <tr>
+                <th scope="row">中国全球领事保护</th>
+                <td>
+                  <a href="tel:+861012308">+86-10-12308</a>
+                  <span class="hint">外交部全球领事保护与服务应急呼叫中心，24 小时</span>
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">备用领事热线</th>
+                <td>
+                  <a href="tel:+861065612308">+86-10-65612308</a>
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">驻越南使馆（河内）</th>
+                <td>
+                  <a href="tel:+842439331038">+84-24-39331038</a>
+                  <span class="hint">领事保护与协助（以 <a href="https://vn.china-embassy.gov.cn/" target="_blank" rel="noopener">中国驻越南大使馆</a> 官网最新公布为准）</span>
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">驻胡志明市总领馆</th>
+                <td>
+                  <a href="tel:+842838292457">+84-28-38292457</a>
+                  <span class="hint">领事保护与协助（以 <a href="https://hochiminhcity.china-consulate.gov.cn/" target="_blank" rel="noopener">驻胡志明市总领馆</a> 官网为准）</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="more-foot">在越南用手机直拨中国固话：一般拨 <strong>00 + 86 + 区号（去首位 0）+ 号码</strong>；拨中国手机：多为 <strong>00 + 86 + 手机号</strong>。具体以你的 SIM 卡说明为准。</p>
+      </section>
+    </div>
 
     <footer>
       🗺️ 地图底图 © OpenStreetMap 贡献者 · <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>。
@@ -552,6 +949,17 @@
         ],
         meals: "早：酒店 · 午：团队风味餐（约 7 USD 标准）· 晚：自理",
         hotel: "Best Western Premier Marvella Nha Trang Hotel",
+        freeSuggest: {
+          title: "自由活动参考",
+          intro:
+            "上午团队结束后有一段老城自由时间，晚间用餐自理。以下为自行安排思路，费用、开放时间与安全请当场再确认。",
+          items: [
+            "<strong>还剑湖一带</strong>：环湖散步、外观龟塔；若进玉山祠等需另购票。",
+            "<strong>三十六行街</strong>：按「专业街」逛咖啡、丝绸、银饰伴手礼，穿行注意摩托。",
+            "<strong>歇脚喝咖啡</strong>：鸡蛋咖啡、椰子咖啡选一间口碑小店，为下午飞芽庄留体力。",
+            "<strong>晚间自理</strong>：老城河粉、烤肉米粉、炸春卷或环湖夜景皆可；明早还有酒店早餐。",
+          ],
+        },
       },
       {
         n: 3,
@@ -566,6 +974,18 @@
         ],
         meals: "早：酒店 · 午：自理 · 晚：自理",
         hotel: "Best Western Premier Marvella Nha Trang Hotel",
+        freeSuggest: {
+          title: "自由活动参考",
+          intro:
+            "本日无车无导游，可按体力与天气任选组合；预订出海、乐园类项目建议选正规旅行社或可信平台并看清集合点。",
+          items: [
+            "<strong>出海跳岛</strong>：黑岛、竹岛、迷你岛等浮潜 / 深潜一日团较经典，自备防晒、毛巾与晕船药。",
+            "<strong>珍珠岛 Vinpearl</strong>：缆车＋乐园 / 动物园适合亲子，排队与闭园时间需预留。",
+            "<strong>泥浆浴</strong>：I-Res、Thap Ba 等选一家放松半天，官网或前台可查套餐。",
+            "<strong>海滩与海鲜</strong>：Tran Phu 沿线沙滩躺卧；海鲜排档先问清价再落座。",
+            "<strong>提示</strong>：次日团队行程含占婆塔、五指岩等，今日可优先安排出海或珍珠岛，减少景点重复。",
+          ],
+        },
       },
       {
         n: 4,
@@ -588,6 +1008,15 @@
         ],
         meals: "早：酒店 · 午：团队风味餐（约 14 USD 标准）· 晚：自理",
         hotel: "Centara Mirage Resort Mui Ne",
+        freeSuggest: {
+          title: "自由活动参考",
+          intro: "晚间抵达美奈后晚餐自理，可在渔村或酒店周边解决。",
+          items: [
+            "<strong>美奈渔村海鲜排挡</strong>：现选海鲜再加工，单价与加工费先谈妥。",
+            "<strong>沿海公路散步</strong>：看日落与渔船归港，穿防滑鞋注意浪涌。",
+            "<strong>省心备选</strong>：Centara 或附近度假村餐厅、客房送餐，适合当天车程后休整。",
+          ],
+        },
       },
       {
         n: 5,
@@ -606,6 +1035,17 @@
         ],
         meals: "早：酒店 · 午：自理 · 晚：自理",
         hotel: "Centara Mirage Resort Mui Ne",
+        freeSuggest: {
+          title: "自由活动参考",
+          intro: "上午无团队集合，下午仍有白沙丘等行程，建议控制体力与返回酒店时间。",
+          items: [
+            "<strong>红沙丘日出</strong>：清晨可打车或包吉普（事先议价）；与下午白沙丘光影不同。",
+            "<strong>酒店沙滩与水上乐园</strong>：Centara 自带滑道与泳池，适合带娃放空。",
+            "<strong>风筝冲浪体验</strong>：美奈风况出名，零基础可约短时体验课（提前预约）。",
+            "<strong>Brunch 咖啡馆</strong>：沿海公路数家海景咖啡，适合慢起与拍照。",
+            "<strong>午晚餐</strong>：渔村海鲜或度假村餐厅；下午团队活动前别迟到。",
+          ],
+        },
       },
       {
         n: 6,
@@ -627,6 +1067,17 @@
         ],
         meals: "早：酒店 · 午：海鲜自助 · 晚：自理",
         hotel: "T-Ritz Saigon Hotel & Apartment",
+        freeSuggest: {
+          title: "自由活动参考",
+          intro: "团队下午行程结束后晚餐自理，次日清晨航班，建议早点回酒店整理行李。",
+          items: [
+            "<strong>滨城市场夜市</strong>：小吃、果汁、热带干货多，财物贴身、先问价。",
+            "<strong>阮惠步行街</strong>：喷泉与灯光夜景可提前查演出时段。",
+            "<strong>范五老街一带</strong>：啤酒、轻食、现场音乐密度高，注意饮酒适量。",
+            "<strong>Landmark 81</strong>：观景台看夜景（查晚间闭馆与购票）。",
+            "<strong>提醒</strong>：明早 07:20 航班，今晚别安排过远郊区，预留叫醒与去机场时间。",
+          ],
+        },
       },
       {
         n: 7,
@@ -637,7 +1088,7 @@
         blocks: [
           { h: "清晨", items: [
             "打包早餐，送国际机场（行程文案若写「河内机场」应为笔误，实际为胡志明新山一机场）",
-            "航班 VN 524：07:20 起飞 — 12:40 抵达浦东（以最终出票为准）",
+            "航班 VN 524：07:20 起飞 — 12:40 抵达浦东",
           ]},
         ],
         meals: "早：打包早餐",
@@ -703,10 +1154,10 @@
 
       if (latlngs.length > 1) {
         L.polyline(latlngs, {
-          color: "#ff2d88",
-          weight: 4,
-          opacity: 0.92,
-          dashArray: "12 8",
+          color: "#1a8aa8",
+          weight: 3,
+          opacity: 0.9,
+          dashArray: "10 7",
         }).addTo(tripMapState.overlay);
       }
 
@@ -794,6 +1245,37 @@
       renderCityTips(index);
     }
 
+    /** 本地「今天」落在行程年 YEAR 的 4月29日—5月5日时，返回对应 day 下标；否则 0（Day 1） */
+    function defaultDayIndexFromToday() {
+      const tripYear = YEAR;
+      const now = new Date();
+      const pad = function (n) {
+        return (n < 10 ? "0" : "") + n;
+      };
+      const todayStr =
+        now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate());
+      const startStr = tripYear + "-04-29";
+      const endStr = tripYear + "-05-05";
+      if (todayStr < startStr || todayStr > endStr) return 0;
+      const i = days.findIndex(function (dd) {
+        return dd.date === todayStr;
+      });
+      return i >= 0 ? i : 0;
+    }
+
+    function formatWeatherFetchedAt(ts) {
+      const s = new Date(ts).toLocaleString("zh-CN", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+      });
+      return "🕐 以上天气已于 " + s + " 从网络拉取（您设备本地时间）。刷新页面会重新获取。";
+    }
+
     async function fetchCityRange(key, start, end) {
       const c = cities[key];
       const u = new URL("https://api.open-meteo.com/v1/forecast");
@@ -819,7 +1301,7 @@
       return map;
     }
 
-    function renderWxEl(container, dateStr, wxKeys, cache) {
+    function renderWxEl(container, dateStr, wxKeys, cache, fetchedAtTs) {
       container.innerHTML = "";
       wxKeys.forEach((k) => {
         const el = document.createElement("span");
@@ -844,6 +1326,14 @@
           Math.round(row.min) + "–" + Math.round(row.max) + "°C" +
           " · 降水概率 " + (row.pop != null ? row.pop : "—") + "%";
       });
+
+      if (fetchedAtTs != null) {
+        const meta = document.createElement("div");
+        meta.className = "wx-fetched-at";
+        meta.setAttribute("aria-live", "polite");
+        meta.textContent = formatWeatherFetchedAt(fetchedAtTs);
+        container.appendChild(meta);
+      }
     }
 
     const start = days[0].date;
@@ -852,11 +1342,6 @@
 
     const picker = document.getElementById("day-picker");
     const root = document.getElementById("days");
-
-    const lbl = document.createElement("span");
-    lbl.className = "pick-label";
-    lbl.textContent = "📅 选择第几天";
-    picker.appendChild(lbl);
 
     const tabRow = document.createElement("div");
     tabRow.className = "day-tab-row";
@@ -919,20 +1404,151 @@
         card.appendChild(sec);
       });
 
+      if (d.freeSuggest) {
+        const fs = d.freeSuggest;
+        const sec = document.createElement("section");
+        sec.className = "free-suggest";
+        sec.setAttribute("aria-label", fs.title || "自由活动参考");
+        let html =
+          "<h3>🧭 " + (fs.title || "自由活动参考") + "</h3>";
+        if (fs.intro) {
+          html += '<p class="free-suggest-intro">' + fs.intro + "</p>";
+        }
+        html +=
+          "<ul>" +
+          fs.items
+            .map(function (line) {
+              return "<li>" + line + "</li>";
+            })
+            .join("") +
+          "</ul>";
+        sec.innerHTML = html;
+        card.appendChild(sec);
+      }
+
       const meta = document.createElement("div");
       meta.className = "meta";
-      meta.innerHTML =
-        "<div><b>🍽️ 餐饮</b> " + d.meals + "</div><div><b>🏨 住宿</b> " + d.hotel + "</div>";
+      const mealsLine = document.createElement("div");
+      mealsLine.innerHTML = "<b>🍽️ 餐饮</b> " + d.meals;
+      meta.appendChild(mealsLine);
+
+      const hotelRow = document.createElement("div");
+      hotelRow.className = "meta-hotel";
+      const hotelLabel = document.createElement("b");
+      hotelLabel.textContent = "🏨 住宿";
+      hotelRow.appendChild(hotelLabel);
+      hotelRow.appendChild(document.createTextNode(" "));
+      const hotelName = document.createElement("span");
+      hotelName.className = "meta-hotel-name";
+      hotelName.textContent = d.hotel;
+      hotelRow.appendChild(hotelName);
+
+      const hotelText = (d.hotel || "").trim();
+      if (hotelText && hotelText !== "—") {
+        const copyBtn = document.createElement("button");
+        copyBtn.type = "button";
+        copyBtn.className = "btn-copy-hotel";
+        copyBtn.setAttribute("aria-label", "复制酒店名称：" + hotelText);
+        copyBtn.title = "复制酒店名称";
+        copyBtn.textContent = "复制";
+        copyBtn.addEventListener("click", function () {
+          const label = "复制";
+          const done = function (word) {
+            copyBtn.textContent = word;
+            copyBtn.disabled = true;
+            window.setTimeout(function () {
+              copyBtn.textContent = label;
+              copyBtn.disabled = false;
+            }, 1400);
+          };
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(hotelText).then(function () {
+              done("已复制");
+            }).catch(function () {
+              done("失败");
+            });
+          } else {
+            const ta = document.createElement("textarea");
+            ta.value = hotelText;
+            ta.setAttribute("readonly", "");
+            ta.style.position = "fixed";
+            ta.style.left = "-9999px";
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+              if (document.execCommand("copy")) done("已复制");
+              else done("失败");
+            } catch (e) {
+              done("失败");
+            }
+            document.body.removeChild(ta);
+          }
+        });
+        hotelRow.appendChild(copyBtn);
+      }
+      meta.appendChild(hotelRow);
       card.appendChild(meta);
 
       root.appendChild(card);
     });
 
     initTripMap();
-    selectDay(0);
+    selectDay(defaultDayIndexFromToday());
     requestAnimationFrame(function () {
       if (tripMapState.map) tripMapState.map.invalidateSize();
     });
+
+    function initAppTabs() {
+      const appTabs = [
+        document.getElementById("app-tab-trip"),
+        document.getElementById("app-tab-tools"),
+      ];
+      const appPanels = [
+        document.getElementById("app-panel-trip"),
+        document.getElementById("app-panel-tools"),
+      ];
+      function selectAppTab(idx) {
+        appTabs.forEach((btn, i) => {
+          if (!btn) return;
+          const on = i === idx;
+          btn.setAttribute("aria-selected", on ? "true" : "false");
+          btn.tabIndex = on ? 0 : -1;
+        });
+        appPanels.forEach((panel, i) => {
+          if (!panel) return;
+          if (i === idx) panel.removeAttribute("hidden");
+          else panel.setAttribute("hidden", "");
+        });
+        if (idx === 0 && tripMapState.map) {
+          requestAnimationFrame(function () {
+            tripMapState.map.invalidateSize();
+          });
+        }
+      }
+      appTabs.forEach((btn, i) => {
+        if (!btn) return;
+        btn.addEventListener("click", function () {
+          selectAppTab(i);
+        });
+      });
+      const tabRow = document.querySelector(".app-tab-row");
+      if (tabRow) {
+        tabRow.addEventListener("keydown", function (e) {
+          if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+          const cur = appTabs.findIndex(function (b) {
+            return b && b.getAttribute("aria-selected") === "true";
+          });
+          if (cur < 0) return;
+          e.preventDefault();
+          const dir = e.key === "ArrowRight" ? 1 : -1;
+          const next = (cur + dir + appTabs.length) % appTabs.length;
+          selectAppTab(next);
+          if (appTabs[next]) appTabs[next].focus();
+        });
+      }
+      selectAppTab(0);
+    }
+    initAppTabs();
 
     (async () => {
       const cache = {};
@@ -949,10 +1565,78 @@
         return;
       }
 
+      const weatherFetchedAt = Date.now();
       document.querySelectorAll(".weather-row").forEach((row) => {
         const dateStr = row.getAttribute("data-date");
         const wxKeys = row.getAttribute("data-keys").split(",");
-        renderWxEl(row, dateStr, wxKeys, cache);
+        renderWxEl(row, dateStr, wxKeys, cache, weatherFetchedAt);
+      });
+    })();
+
+    (function initFxTool() {
+      const root = document.querySelector(".fx-tool");
+      const cnyIn = document.getElementById("fx-cny-in");
+      const vndIn = document.getElementById("fx-vnd-in");
+      const outVnd = document.getElementById("fx-vnd-from-cny");
+      const outCny = document.getElementById("fx-cny-from-vnd");
+      const note = document.getElementById("fx-rate-note");
+      if (!root || !cnyIn || !vndIn || !outVnd || !outCny) return;
+
+      const VND_PER_CNY = Math.max(
+        1,
+        Number(root.getAttribute("data-fx-vnd-per-cny")) || 3560
+      );
+      const CNY_PER_VND = 1 / VND_PER_CNY;
+      if (note) {
+        note.innerHTML =
+          "参考汇率（页面内固定）：<strong>1 CNY = " +
+          VND_PER_CNY.toLocaleString("zh-CN") +
+          " VND</strong>（约 2026 年 4 月常见中间价量级，非实时）。实际以银行、机场换汇点或卡组织结算为准。";
+      }
+
+      function parseAmount(raw) {
+        const t = String(raw).replace(/,/g, "").trim();
+        if (t === "" || t === "." || t === "-") return null;
+        const n = Number(t);
+        if (!Number.isFinite(n) || n < 0) return null;
+        return n;
+      }
+
+      function fmtVnd(n) {
+        return (
+          "≈ " +
+          Math.round(n).toLocaleString("zh-CN", { maximumFractionDigits: 0 }) +
+          " 越南盾 (VND)"
+        );
+      }
+
+      function fmtCny(n) {
+        return (
+          "≈ " +
+          n.toLocaleString("zh-CN", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }) +
+          " 人民币 (CNY)"
+        );
+      }
+
+      cnyIn.addEventListener("input", function () {
+        const v = parseAmount(cnyIn.value);
+        if (v === null) {
+          outVnd.textContent = "≈ — 越南盾 (VND)";
+          return;
+        }
+        outVnd.textContent = fmtVnd(v * VND_PER_CNY);
+      });
+
+      vndIn.addEventListener("input", function () {
+        const v = parseAmount(vndIn.value);
+        if (v === null) {
+          outCny.textContent = "≈ — 人民币 (CNY)";
+          return;
+        }
+        outCny.textContent = fmtCny(v * CNY_PER_VND);
       });
     })();
   </script>
