@@ -43,6 +43,11 @@
         linear-gradient(180deg, #f5fcfd 0%, #eef8fb 45%, #e8f4f8 100%);
       background-attachment: fixed;
     }
+    @media (max-width: 768px) {
+      body {
+        background-attachment: scroll;
+      }
+    }
     .wrap {
       max-width: 720px;
       margin: 0 auto;
@@ -273,15 +278,60 @@
       margin: 0.65rem 0 0.28rem;
       font-weight: 700;
     }
-    .day section.free-suggest {
+    .free-suggest-details {
       margin-top: 0.55rem;
-      padding: 0.75rem 0.95rem 0.85rem;
       border-radius: 12px;
       border: 1px dashed rgba(77, 182, 172, 0.55);
       background: linear-gradient(155deg, rgba(77, 182, 172, 0.1), rgba(227, 244, 251, 0.65));
+      overflow: hidden;
     }
-    .day section.free-suggest > h3 {
-      margin-top: 0;
+    .free-suggest-details > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 0.62rem 1.85rem 0.62rem 0.95rem;
+      position: relative;
+      user-select: none;
+      font-family: var(--font-main);
+    }
+    .free-suggest-details > summary::-webkit-details-marker {
+      display: none;
+    }
+    .free-suggest-details > summary:hover {
+      background: rgba(227, 244, 251, 0.45);
+    }
+    .free-suggest-sum-title {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--ocean-deep);
+      font-weight: 700;
+    }
+    .free-suggest-sum-hint {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+      font-weight: 500;
+    }
+    .free-suggest-details > summary::after {
+      content: "▼";
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      margin-top: -0.35em;
+      font-size: 0.55rem;
+      color: var(--ocean);
+      font-weight: 700;
+      transition: transform 0.2s;
+    }
+    .free-suggest-details[open] > summary {
+      border-bottom: 1px solid rgba(77, 182, 172, 0.25);
+    }
+    .free-suggest-details[open] > summary::after {
+      transform: rotate(-180deg);
+    }
+    .free-suggest-body {
+      padding: 0.65rem 0.95rem 0.85rem;
+      font-family: var(--font-main);
     }
     .free-suggest-intro {
       font-size: 0.82rem;
@@ -290,7 +340,7 @@
       line-height: 1.5;
       font-weight: 500;
     }
-    .free-suggest li strong {
+    .free-suggest-body li strong {
       color: var(--ocean-deep);
       font-weight: 700;
     }
@@ -612,6 +662,134 @@
       line-height: 1.45;
       font-weight: 500;
     }
+
+    /* 手机端：更大触控区、行程攻略 Tab 横向滑动、短语表改为卡片堆叠 */
+    @media (max-width: 560px) {
+      .wrap {
+        padding: 1.1rem 0.85rem 2.5rem;
+      }
+      .app-tab-row {
+        gap: 0.5rem;
+      }
+      .app-tab {
+        padding: 0.65rem 0.5rem;
+        min-height: 2.75rem;
+        font-size: clamp(0.82rem, 3.2vw, 0.92rem);
+        border-radius: 12px;
+      }
+      .day-picker {
+        margin-left: -0.15rem;
+        margin-right: -0.15rem;
+      }
+      .day-tab-row {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x proximity;
+        gap: 0.45rem;
+        padding: 0.15rem 0.15rem 0.45rem;
+        margin: 0;
+        overscroll-behavior-x: contain;
+      }
+      .day-tab-row::-webkit-scrollbar {
+        height: 4px;
+      }
+      .day-tab-row::-webkit-scrollbar-thumb {
+        background: rgba(42, 143, 189, 0.35);
+        border-radius: 999px;
+      }
+      .day-tab {
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+        min-width: 5.35rem;
+        max-width: 6.5rem;
+        padding: 0.52rem 0.45rem 0.48rem;
+        min-height: 3.35rem;
+        font-size: 0.78rem;
+        border-radius: 12px;
+      }
+      .day-tab .tab-ico {
+        font-size: 1.05rem;
+        margin-bottom: 0.12rem;
+      }
+      .day-tab .tab-n {
+        font-size: 0.72rem;
+        white-space: nowrap;
+      }
+      .day-tab .tab-d {
+        font-size: 0.66rem;
+        margin-top: 0.1rem;
+      }
+      .btn-copy-hotel {
+        font-size: 0.72rem;
+        padding: 0.32rem 0.6rem;
+        min-height: 2.25rem;
+      }
+      .more-table--phrases {
+        display: block;
+        width: 100%;
+      }
+      .more-table--phrases thead {
+        display: none;
+      }
+      .more-table--phrases tbody {
+        display: block;
+      }
+      .more-table--phrases tbody tr {
+        display: block;
+        border: 1px solid rgba(42, 143, 189, 0.2);
+        border-radius: 12px;
+        margin-bottom: 0.55rem;
+        padding: 0.5rem 0.65rem 0.55rem;
+        background: rgba(255, 255, 255, 0.75);
+      }
+      .more-table--phrases tbody tr:last-child {
+        margin-bottom: 0;
+      }
+      .more-table--phrases th,
+      .more-table--phrases td {
+        display: block;
+        width: 100%;
+        border: 0;
+        padding: 0.25rem 0;
+      }
+      .more-table--phrases td:first-child {
+        font-weight: 700;
+        color: var(--ocean-deep);
+        padding-top: 0;
+      }
+      .more-table--phrases td:nth-child(2) {
+        padding: 0.15rem 0 0.1rem;
+      }
+      .more-table--phrases td:nth-child(2)::before {
+        content: "越南语：";
+        font-size: 0.68rem;
+        font-weight: 700;
+        color: var(--muted);
+        letter-spacing: 0.04em;
+        display: block;
+        margin-bottom: 0.12rem;
+      }
+      .more-table--phrases td:nth-child(3)::before {
+        content: "读音参考：";
+        font-size: 0.68rem;
+        font-weight: 700;
+        color: var(--muted);
+        letter-spacing: 0.04em;
+        display: block;
+        margin-bottom: 0.12rem;
+      }
+    }
+
+    /* 宽屏触控板 / 平板：顶栏 Tab 也保证易点（窄屏已由上一段覆盖） */
+    @media (min-width: 561px) and (pointer: coarse) {
+      .app-tab {
+        min-height: 2.75rem;
+        padding: 0.62rem 0.45rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -626,9 +804,9 @@
     </header>
 
     <div class="app-tabs">
-      <div class="app-tab-row" role="tablist" aria-label="日程与实用工具">
+      <div class="app-tab-row" role="tablist" aria-label="行程攻略与实用工具">
         <button type="button" class="app-tab" role="tab" id="app-tab-trip" aria-controls="app-panel-trip" aria-selected="true">
-          📅 日程
+          📅 行程攻略
         </button>
         <button type="button" class="app-tab" role="tab" id="app-tab-tools" aria-controls="app-panel-tools" aria-selected="false">
           🛠️ 实用工具
@@ -875,42 +1053,52 @@
 
     const tipCityEmoji = { hanoi: "🏛️", nhatrang: "🏝️", muine: "🏜️", hcmc: "🌇" };
 
+    /** timezone 供 Open-Meteo 按当地日历对齐「行程日」的 daily 预报 */
     const cities = {
-      hanoi: { name: "河内", lat: 21.0285, lon: 105.8542 },
-      nhatrang: { name: "芽庄", lat: 12.2388, lon: 109.1967 },
-      muine: { name: "美奈", lat: 10.95, lon: 108.2833 },
-      hcmc: { name: "胡志明市", lat: 10.8231, lon: 106.6297 },
+      shanghai: { name: "上海", lat: 31.2304, lon: 121.4737, timezone: "Asia/Shanghai" },
+      hanoi: { name: "河内", lat: 21.0285, lon: 105.8542, timezone: "Asia/Ho_Chi_Minh" },
+      nhatrang: { name: "芽庄", lat: 12.2388, lon: 109.1967, timezone: "Asia/Ho_Chi_Minh" },
+      muine: { name: "美奈", lat: 10.95, lon: 108.2833, timezone: "Asia/Ho_Chi_Minh" },
+      hcmc: { name: "胡志明市", lat: 10.8231, lon: 106.6297, timezone: "Asia/Ho_Chi_Minh" },
     };
 
-    /** 与当日 wxKeys 对应，供底部「城市小知识」展开区使用 */
+    /** 与当日行程相关的越南城市；上海等仅出现在天气里的城市由 renderCityTips 过滤，不展示在此区 */
     const cityTips = {
       hanoi: {
         title: "河内（Hà Nội）",
         history:
           "红河三角洲北部的千年都会，长期是越南各王朝的都城或陪都，皇城、文庙与寺庙林立；19 世纪末起受法国殖民影响，还剑湖周边形成「东南亚街巷 + 欧式立面」的混合街区。统一后仍是首都，政治与科教资源集中。",
-        features:
-          "三十六行街适合步行感受市井节奏；河粉、春卷、鸡蛋咖啡等常被视为越南味的代表；冬季略凉、雨季明显，整体节奏较南部从容。",
+        scenery:
+          "三十六行街适合步行感受市井节奏；还剑湖一带古迹与摩托穿行的街巷叠在一起，市井密度高。冬季略凉、雨季明显，整体节奏较南部从容。",
+        cuisine:
+          "河粉、春卷、鸡蛋咖啡等常被视为越南味的代表；从路边摊到老字号各有拥趸，可留一顿给「蹲小板凳喝汤」的河粉体验。",
       },
       nhatrang: {
         title: "芽庄（Nha Trang）",
         history:
           "中南部重要海港，历史上与占婆海洋王国关系密切，沿岸仍留有印度教风格的占婆塔（如婆那加塔）。近代以来渔业、航运与旅游并行，是越南最早一批大规模滨海度假开发的城市之一。",
-        features:
-          "海湾长、海水能见度较好，潜水与跳岛成熟；酒店与餐饮国际化程度高；老城与沙滩一线之隔，适合「看海 + 短途出海」。",
+        scenery:
+          "海湾长、海水能见度较好，潜水与跳岛成熟；老城与沙滩一线之隔，适合「看海 + 短途出海」的组合玩法。",
+        cuisine:
+          "酒店区餐饮国际化程度高；滨海海鲜排档、椰子冻与越南冰咖很常见，落座前建议先问清单价与做法。",
       },
       muine: {
         title: "美奈（Mũi Né）",
         history:
           "通常指潘切市以东的沿海度假区，传统上以渔村、避风港与沿岸农作并存；近几十年因稳定风况与长滩，成长为风筝冲浪与高端度假村聚集地，沙丘与海岸公路成为标志性景观。",
-        features:
-          "白沙丘、红沙丘与渔村形成强烈视觉反差；沿海酒店带与本地渔业仅一路之隔；火龙果等热带种植在近郊很常见。",
+        scenery:
+          "白沙丘、红沙丘与渔村形成强烈视觉反差；沿海酒店带与本地渔业仅一路之隔，公路与沙滩适合追日出日落。",
+        cuisine:
+          "渔村海鲜多现选现做；近郊火龙果与热带水果摊多，适合当随手零食或伴手礼。",
       },
       hcmc: {
         title: "胡志明市（Thành phố Hồ Chí Minh）",
         history:
           "湄公河三角洲的贸易枢纽，法国殖民时期为「交趾支那」中心，歌剧院、中央邮局、林荫大道构成「东方小巴黎」骨架；越战时期曾为南越政权首都，城市记忆多元。统一后改名胡志明市，至今仍是全国经济规模最大、国际化程度最高的都市。",
-        features:
-          "殖民建筑、摩天楼与巷弄小店高密度共存；咖啡、法棍与各国料理选择极多，夜生活活跃；交通繁忙，适合作为感受越南商业活力的窗口。",
+        scenery:
+          "殖民建筑、摩天楼与巷弄小店高密度共存；范五老街、阮惠步行街一带夜生活活跃，交通繁忙，最能感受都市商业脉搏。",
+        cuisine:
+          "越南咖啡、法棍三明治（Bánh mì）与河粉并行；各国料理与甜品、冰饮选择极多，适合用几顿小吃串起城市味觉地图。",
       },
     };
 
@@ -920,7 +1108,7 @@
         date: `${YEAR}-04-29`,
         label: "4月29日 周二",
         title: "上海 → 河内",
-        wxKeys: ["hanoi"],
+        wxKeys: ["shanghai", "hanoi"],
         blocks: [
           { h: "行程", items: [
             "航班 VN 533：浦东 15:50 — 河内 18:25",
@@ -1084,7 +1272,7 @@
         date: `${YEAR}-05-05`,
         label: "5月5日 周一",
         title: "胡志明市 → 上海",
-        wxKeys: ["hcmc"],
+        wxKeys: ["hcmc", "shanghai"],
         blocks: [
           { h: "清晨", items: [
             "打包早餐，送国际机场（行程文案若写「河内机场」应为笔误，实际为胡志明新山一机场）",
@@ -1149,7 +1337,8 @@
       if (!tripMapState.map || !tripMapState.overlay) return;
       tripMapState.overlay.clearLayers();
 
-      const keys = d.wxKeys;
+      /* 地图仅展示越南段动线；上海仍出现在天气与文案中，避免缩放到跨国尺度 */
+      const keys = d.wxKeys.filter((k) => k !== "shanghai");
       const latlngs = keys.map((k) => [cities[k].lat, cities[k].lon]);
 
       if (latlngs.length > 1) {
@@ -1200,11 +1389,12 @@
 
       const wasOpen = det ? det.open : false;
       const keys = d.wxKeys.filter((k, i, a) => a.indexOf(k) === i);
+      const tipKeys = keys.filter((k) => k !== "shanghai");
 
       label.textContent =
-        "🧭 本日涉及：" + keys.map((k) => tipCityEmoji[k] + " " + cities[k].name).join(" · ");
+        "🧭 本日涉及：" + tipKeys.map((k) => tipCityEmoji[k] + " " + cities[k].name).join(" · ");
 
-      body.innerHTML = keys
+      body.innerHTML = tipKeys
         .map((k) => {
           const t = cityTips[k];
           if (!t) return "";
@@ -1219,8 +1409,11 @@
             '<p><span class="k">📜 历史脉络</span>' +
             t.history +
             "</p>" +
-            '<p><span class="k">✨ 在地特色</span>' +
-            t.features +
+            '<p><span class="k">🏞️ 风光看点</span>' +
+            t.scenery +
+            "</p>" +
+            '<p><span class="k">🍜 饮食特色</span>' +
+            t.cuisine +
             "</p>" +
             "</article>"
           );
@@ -1282,7 +1475,7 @@
       u.searchParams.set("latitude", c.lat);
       u.searchParams.set("longitude", c.lon);
       u.searchParams.set("daily", "weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max");
-      u.searchParams.set("timezone", "Asia/Ho_Chi_Minh");
+      u.searchParams.set("timezone", c.timezone || "Asia/Ho_Chi_Minh");
       u.searchParams.set("start_date", start);
       u.searchParams.set("end_date", end);
       const r = await fetch(u.toString());
@@ -1406,15 +1599,24 @@
 
       if (d.freeSuggest) {
         const fs = d.freeSuggest;
-        const sec = document.createElement("section");
-        sec.className = "free-suggest";
-        sec.setAttribute("aria-label", fs.title || "自由活动参考");
-        let html =
-          "<h3>🧭 " + (fs.title || "自由活动参考") + "</h3>";
+        const det = document.createElement("details");
+        det.className = "free-suggest-details";
+        det.setAttribute("aria-label", fs.title || "自由活动参考");
+
+        const sum = document.createElement("summary");
+        sum.className = "free-suggest-summary";
+        sum.innerHTML =
+          '<span class="free-suggest-sum-title">🧭 ' +
+          (fs.title || "自由活动参考") +
+          '</span><span class="free-suggest-sum-hint">点击展开</span>';
+
+        const body = document.createElement("div");
+        body.className = "free-suggest-body";
+        let bodyHtml = "";
         if (fs.intro) {
-          html += '<p class="free-suggest-intro">' + fs.intro + "</p>";
+          bodyHtml += '<p class="free-suggest-intro">' + fs.intro + "</p>";
         }
-        html +=
+        bodyHtml +=
           "<ul>" +
           fs.items
             .map(function (line) {
@@ -1422,8 +1624,11 @@
             })
             .join("") +
           "</ul>";
-        sec.innerHTML = html;
-        card.appendChild(sec);
+        body.innerHTML = bodyHtml;
+
+        det.appendChild(sum);
+        det.appendChild(body);
+        card.appendChild(det);
       }
 
       const meta = document.createElement("div");
