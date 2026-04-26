@@ -2,9 +2,6 @@
 
 本文件夹可单独作为一个 Git 仓库发布到 GitHub Pages，在微信里分享链接即可打开。
 
-**说明：** `ruiiiiiur@gmail.com` 是登录邮箱；在 Git 和网址里要用的是 **GitHub 用户名**：`ruiiiiiur-png`（来自你的仓库链接）。
-
-**你的仓库：** [https://github.com/ruiiiiiur-png/vietnam_trip](https://github.com/ruiiiiiur-png/vietnam_trip)  
 **发布成功后，分享给朋友的链接一般是：**  
 **[https://ruiiiiiur-png.github.io/vietnam_trip/](https://ruiiiiiur-png.github.io/vietnam_trip/)**  
 （在仓库 **Settings → Pages** 里开启并保存后，等 1～3 分钟生效。）
