@@ -260,19 +260,75 @@
       border-radius: 10px;
       padding: 0.38rem 0.6rem;
       color: var(--ocean-deep);
+      appearance: none;
+      font-family: inherit;
+      cursor: pointer;
+      text-align: left;
+      line-height: inherit;
+      opacity: 1;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    }
+    .wx:hover,
+    .wx[aria-expanded="true"] {
+      border-color: var(--mint);
+      box-shadow: 0 5px 16px rgba(42, 143, 189, 0.13);
+      transform: translateY(-1px);
+    }
+    .wx[aria-expanded="true"] {
+      background: linear-gradient(135deg, rgba(77, 182, 172, 0.2), rgba(227, 244, 251, 0.98));
     }
     .wx.loading {
       color: var(--muted);
       border-style: dashed;
       background: rgba(255, 255, 255, 0.85);
+      cursor: wait;
+      transform: none;
+      box-shadow: none;
     }
     .wx.err {
       border-color: rgba(42, 143, 189, 0.4);
       color: #8b4a52;
       background: rgba(255, 245, 245, 0.92);
+      cursor: default;
     }
     .wx strong {
       color: var(--ocean);
+    }
+    .wx-hourly-panel {
+      flex: 1 0 100%;
+      width: 100%;
+      border: 1px solid rgba(77, 182, 172, 0.32);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 0.7rem 0.75rem 0.8rem;
+      box-shadow: 0 8px 24px rgba(20, 58, 74, 0.07);
+    }
+    .wx-hourly-title {
+      margin: 0 0 0.5rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--ocean-deep);
+    }
+    .wx-chart-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 10px;
+      background:
+        linear-gradient(180deg, rgba(240, 251, 252, 0.92), rgba(255, 255, 255, 0.96));
+      border: 1px solid rgba(42, 143, 189, 0.12);
+    }
+    .wx-chart {
+      display: block;
+      min-width: 620px;
+      width: 100%;
+      height: auto;
+    }
+    .wx-chart-note {
+      margin: 0.45rem 0 0;
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 500;
+      line-height: 1.45;
     }
     .day section h3 {
       font-family: var(--font-main);
@@ -665,6 +721,21 @@
     .fx-tool .fx-out[aria-busy="true"] {
       color: var(--muted);
     }
+    .fx-tool .fx-mental-note {
+      margin: 0.8rem 0 0;
+      padding: 0.62rem 0.75rem;
+      border-radius: 12px;
+      border: 1px solid rgba(77, 182, 172, 0.42);
+      background: linear-gradient(135deg, rgba(77, 182, 172, 0.2), rgba(227, 244, 251, 0.94));
+      color: var(--ocean-deep);
+      font-size: 0.84rem;
+      font-weight: 700;
+      line-height: 1.45;
+      box-shadow: 0 5px 16px rgba(42, 143, 189, 0.09);
+    }
+    .fx-tool .fx-mental-note strong {
+      color: var(--ocean);
+    }
     .fx-tool .fx-disclaimer {
       font-size: 0.7rem;
       color: var(--muted);
@@ -801,12 +872,12 @@
         <h2>🗺️ 行程地图</h2>
         <div id="trip-map" role="img" aria-label="行程地图"></div>
         <p class="map-note" id="map-context"></p>
-        <p class="map-note">🧭 标注为大致市中心，便于看动线；酒店与景点请再结合导航精确定位。</p>
+        <p class="map-note">🧭 部分日期标注具体机场、餐厅、酒店；其余日期标注城市大致位置，精确导航请以地图 App 为准。</p>
       </section>
     </div>
 
     <div class="app-panel" id="app-panel-tools" role="tabpanel" aria-labelledby="app-tab-tools" hidden>
-      <section class="map-card fx-tool app-more-card" data-fx-vnd-per-cny="3560" aria-label="人民币与越南盾换算">
+      <section class="map-card fx-tool app-more-card" data-fx-vnd-per-cny="3600" aria-label="人民币与越南盾换算">
         <h2>💱 简易汇率</h2>
         <div class="fx-rows">
           <div class="fx-row">
@@ -820,6 +891,7 @@
             <div class="fx-out" id="fx-cny-from-vnd" aria-live="polite">≈ — 人民币 (CNY)</div>
           </div>
         </div>
+        <p class="fx-mental-note">💡 心算口诀：<strong>越南盾去掉 4 个零，再乘以 3</strong>，约等于人民币金额。</p>
         <p class="fx-disclaimer" id="fx-rate-note"></p>
       </section>
 
@@ -1082,12 +1154,34 @@
         blocks: [
           { h: "行程", items: [
             "航班 VN 533：浦东 15:50 — 河内 18:25",
-            "抵达后导游接机，送酒店",
-            "赠送：越南河粉套餐 + 当地小食；斗笠预计第4天发放",
+            "抵达后导游接机，前往 Phở Lý Quốc Sư 品尝越南河粉",
           ]},
         ],
         meals: "早：自理 · 午：自理 · 晚：河粉套餐",
-        hotel: "REY Hotel Hanoi",
+        hotel: "河内雷伊酒店（REY Hotel Hanoi）",
+        mapPoints: [
+          {
+            name: "河内内排国际机场",
+            icon: "🛬",
+            lat: 21.2187,
+            lon: 105.8042,
+            note: "抵达机场",
+          },
+          {
+            name: "Phở Lý Quốc Sư",
+            icon: "🍜",
+            lat: 21.0306,
+            lon: 105.8491,
+            note: "河粉店，10 Lý Quốc Sư",
+          },
+          {
+            name: "河内雷伊酒店（REY Hotel Hanoi）",
+            icon: "🏨",
+            lat: 21.0378,
+            lon: 105.8451,
+            note: "住宿，14 Lý Nam Đế",
+          },
+        ],
       },
       {
         n: 2,
@@ -1293,14 +1387,24 @@
       const d = days[idx];
       const mapEl = document.getElementById("trip-map");
       const ctx = document.getElementById("map-context");
+      const mapPoints = d.mapPoints || d.wxKeys.filter((k) => k !== "shanghai").map((k) => {
+        const c = cities[k];
+        return {
+          name: c.name,
+          icon: "📍",
+          lat: c.lat,
+          lon: c.lon,
+          note: d.title,
+        };
+      });
+      const pointNames = mapPoints.map((p) => p.name).join(" → ");
       if (ctx) {
-        ctx.textContent =
-          "📍 当前：Day " + d.n + " · " + d.label + " · " + d.wxKeys.map((k) => cities[k].name).join(" → ");
+        ctx.textContent = "📍 当前：Day " + d.n + " · " + d.label + " · " + pointNames;
       }
       if (mapEl) {
         mapEl.setAttribute(
           "aria-label",
-          "Day " + d.n + " " + d.label + "：" + d.title + "，涉及 " + d.wxKeys.map((k) => cities[k].name).join("、")
+          "Day " + d.n + " " + d.label + "：" + d.title + "，涉及 " + mapPoints.map((p) => p.name).join("、")
         );
       }
 
@@ -1308,8 +1412,7 @@
       tripMapState.overlay.clearLayers();
 
       /* 地图仅展示越南段动线；上海仍出现在天气与文案中，避免缩放到跨国尺度 */
-      const keys = d.wxKeys.filter((k) => k !== "shanghai");
-      const latlngs = keys.map((k) => [cities[k].lat, cities[k].lon]);
+      const latlngs = mapPoints.map((p) => [p.lat, p.lon]);
 
       if (latlngs.length > 1) {
         L.polyline(latlngs, {
@@ -1320,20 +1423,20 @@
         }).addTo(tripMapState.overlay);
       }
 
-      keys.forEach((k, i) => {
-        const c = cities[k];
-        const seq = keys.length > 1 ? i + 1 + ". " : "";
+      mapPoints.forEach((p, i) => {
+        const seq = mapPoints.length > 1 ? i + 1 + ". " : "";
         const html =
           "<strong>" +
           seq +
-          "📍 " +
-          c.name +
+          (p.icon || "📍") +
+          " " +
+          p.name +
           "</strong><br><span style=\"opacity:.9;font-size:12px\">Day " +
           d.n +
           " · " +
-          d.title +
+          (p.note || d.title) +
           " ✨</span>";
-        L.marker([c.lat, c.lon]).addTo(tripMapState.overlay).bindPopup(html);
+        L.marker([p.lat, p.lon]).addTo(tripMapState.overlay).bindPopup(html);
       });
 
       let b;
@@ -1344,7 +1447,7 @@
       }
       tripMapState.map.fitBounds(b, {
         padding: [36, 36],
-        maxZoom: latlngs.length === 1 ? 12 : 8,
+        maxZoom: (d.mapPoints || latlngs.length === 1) ? 12 : 8,
       });
     }
 
@@ -1445,49 +1548,307 @@
       u.searchParams.set("latitude", c.lat);
       u.searchParams.set("longitude", c.lon);
       u.searchParams.set("daily", "weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max");
+      u.searchParams.set("hourly", "temperature_2m,precipitation_probability,rain,weathercode");
       u.searchParams.set("timezone", c.timezone || "Asia/Ho_Chi_Minh");
       u.searchParams.set("start_date", start);
       u.searchParams.set("end_date", end);
       const r = await fetch(u.toString());
       if (!r.ok) throw new Error(key);
       const j = await r.json();
-      const map = {};
+      const dailyMap = {};
       const t = j.daily.time;
       for (let i = 0; i < t.length; i++) {
-        map[t[i]] = {
+        dailyMap[t[i]] = {
           wmo: j.daily.weathercode[i],
           max: j.daily.temperature_2m_max[i],
           min: j.daily.temperature_2m_min[i],
           pop: j.daily.precipitation_probability_max[i],
         };
       }
-      return map;
+      const hourlyMap = {};
+      const ht = (j.hourly && j.hourly.time) || [];
+      for (let i = 0; i < ht.length; i++) {
+        const date = String(ht[i]).slice(0, 10);
+        if (!hourlyMap[date]) hourlyMap[date] = [];
+        hourlyMap[date].push({
+          time: String(ht[i]).slice(11, 16),
+          temp: j.hourly.temperature_2m[i],
+          pop: j.hourly.precipitation_probability[i],
+          rain: j.hourly.rain[i],
+          wmo: j.hourly.weathercode[i],
+        });
+      }
+      return { daily: dailyMap, hourly: hourlyMap };
+    }
+
+    function hourlyRainText(row) {
+      const pop = row.pop;
+      const rain = Number(row.rain) || 0;
+      if (rain > 0) return "会下雨";
+      if (pop == null) return "是否下雨：—";
+      if (pop >= 60) return "大概率下雨";
+      if (pop >= 30) return "可能下雨";
+      return "不太会下雨";
+    }
+
+    function svgEl(name, attrs, text) {
+      const el = document.createElementNS("http://www.w3.org/2000/svg", name);
+      Object.keys(attrs || {}).forEach(function (key) {
+        el.setAttribute(key, attrs[key]);
+      });
+      if (text != null) el.textContent = text;
+      return el;
+    }
+
+    function renderHourlyChart(hourlyRows) {
+      const rows = hourlyRows.filter(function (row) {
+        return Number.isFinite(Number(row.temp));
+      });
+      if (!rows.length) return null;
+
+      const width = 720;
+      const height = 260;
+      const left = 44;
+      const right = 48;
+      const top = 28;
+      const bottom = 222;
+      const chartW = width - left - right;
+      const step = rows.length > 1 ? chartW / (rows.length - 1) : chartW;
+      const temps = rows.map(function (row) {
+        return Number(row.temp);
+      });
+      const minTemp = Math.floor(Math.min.apply(null, temps)) - 1;
+      const maxTemp = Math.ceil(Math.max.apply(null, temps)) + 1;
+      const tempRange = Math.max(1, maxTemp - minTemp);
+      const xAt = function (i) {
+        return left + i * step;
+      };
+      const yTemp = function (temp) {
+        return bottom - ((temp - minTemp) / tempRange) * (bottom - top);
+      };
+      const yPop = function (pop) {
+        return bottom - (Math.max(0, Math.min(100, Number(pop) || 0)) / 100) * (bottom - top);
+      };
+      const linePoints = rows.map(function (row, i) {
+        return { x: xAt(i), y: yTemp(Number(row.temp)) };
+      });
+      let smoothPath = "M " + linePoints[0].x.toFixed(1) + " " + linePoints[0].y.toFixed(1);
+      if (linePoints.length > 1) {
+        const slopes = [];
+        const tangents = [];
+        for (let i = 0; i < linePoints.length - 1; i++) {
+          slopes[i] =
+            (linePoints[i + 1].y - linePoints[i].y) /
+            (linePoints[i + 1].x - linePoints[i].x);
+        }
+        tangents[0] = slopes[0];
+        tangents[linePoints.length - 1] = slopes[slopes.length - 1];
+        for (let i = 1; i < linePoints.length - 1; i++) {
+          tangents[i] = (slopes[i - 1] + slopes[i]) / 2;
+        }
+        for (let i = 0; i < slopes.length; i++) {
+          if (slopes[i] === 0) {
+            tangents[i] = 0;
+            tangents[i + 1] = 0;
+          } else {
+            const a = tangents[i] / slopes[i];
+            const b = tangents[i + 1] / slopes[i];
+            const h = Math.hypot(a, b);
+            if (h > 3) {
+              const t = 3 / h;
+              tangents[i] = t * a * slopes[i];
+              tangents[i + 1] = t * b * slopes[i];
+            }
+          }
+        }
+        for (let i = 0; i < linePoints.length - 1; i++) {
+          const p0 = linePoints[i];
+          const p1 = linePoints[i + 1];
+          const dx = p1.x - p0.x;
+          smoothPath +=
+            " C " +
+            (p0.x + dx / 3).toFixed(1) +
+            " " +
+            (p0.y + tangents[i] * dx / 3).toFixed(1) +
+            ", " +
+            (p1.x - dx / 3).toFixed(1) +
+            " " +
+            (p1.y - tangents[i + 1] * dx / 3).toFixed(1) +
+            ", " +
+            p1.x.toFixed(1) +
+            " " +
+            p1.y.toFixed(1);
+        }
+      }
+
+      const svg = svgEl("svg", {
+        class: "wx-chart",
+        viewBox: "0 0 " + width + " " + height,
+        preserveAspectRatio: "xMidYMid meet",
+      });
+      svg.appendChild(svgEl("rect", { x: 0, y: 0, width: width, height: height, fill: "transparent" }));
+      svg.appendChild(svgEl("text", { x: 44, y: 15, "font-size": 11, fill: "#1a6a94", "font-weight": 700 }, "气温折线"));
+      svg.appendChild(svgEl("text", { x: 150, y: 15, "font-size": 11, fill: "#4db6ac", "font-weight": 700 }, "降雨概率柱状"));
+      svg.appendChild(svgEl("text", { x: 10, y: 15, "font-size": 10, fill: "#1a6a94", "font-weight": 700 }, "°C"));
+      svg.appendChild(svgEl("text", { x: width - 24, y: 15, "font-size": 10, fill: "#4db6ac", "font-weight": 700 }, "%"));
+
+      [minTemp, Math.round((minTemp + maxTemp) / 2), maxTemp].forEach(function (temp) {
+        const y = yTemp(temp);
+        svg.appendChild(svgEl("line", {
+          x1: left,
+          x2: width - right,
+          y1: y.toFixed(1),
+          y2: y.toFixed(1),
+          stroke: "rgba(42, 143, 189, 0.12)",
+        }));
+        svg.appendChild(svgEl("text", { x: 10, y: (y + 3).toFixed(1), "font-size": 10, fill: "#5a7d8c" }, temp + "°C"));
+      });
+
+      svg.appendChild(svgEl("line", { x1: left, x2: width - right, y1: bottom, y2: bottom, stroke: "rgba(42, 143, 189, 0.2)" }));
+      svg.appendChild(svgEl("line", { x1: left, x2: left, y1: top, y2: bottom, stroke: "rgba(42, 143, 189, 0.25)" }));
+      svg.appendChild(svgEl("line", { x1: width - right, x2: width - right, y1: top, y2: bottom, stroke: "rgba(77, 182, 172, 0.35)" }));
+      [0, 50, 100].forEach(function (pop) {
+        const y = yPop(pop);
+        svg.appendChild(svgEl("text", { x: width - 12, y: (y + 3).toFixed(1), "text-anchor": "end", "font-size": 10, fill: "#4db6ac" }, pop + "%"));
+      });
+
+      rows.forEach(function (row, i) {
+        const pop = row.pop == null ? 0 : Number(row.pop);
+        const y = yPop(pop);
+        const rect = svgEl("rect", {
+          x: (xAt(i) - Math.max(8, step * 0.28)).toFixed(1),
+          y: y.toFixed(1),
+          width: Math.max(5, Math.min(16, step * 0.56)).toFixed(1),
+          height: Math.max(1, bottom - y).toFixed(1),
+          rx: 3,
+          fill: "rgba(77, 182, 172, 0.58)",
+        });
+        rect.appendChild(svgEl("title", {}, row.time + " 降雨概率 " + (row.pop == null ? "—" : row.pop + "%")));
+        svg.appendChild(rect);
+      });
+
+      svg.appendChild(svgEl("path", {
+        d: smoothPath,
+        fill: "none",
+        stroke: "#1a6a94",
+        "stroke-width": 3,
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+      }));
+
+      rows.forEach(function (row, i) {
+        const dot = svgEl("circle", {
+          cx: xAt(i).toFixed(1),
+          cy: yTemp(Number(row.temp)).toFixed(1),
+          r: 3.5,
+          fill: "#1a6a94",
+        });
+        dot.appendChild(svgEl("title", {}, row.time + " " + Math.round(row.temp) + "°C · " + wmoZh(row.wmo) + " · " + hourlyRainText(row)));
+        svg.appendChild(dot);
+
+        if (i % 3 === 0 || i === rows.length - 1) {
+          svg.appendChild(svgEl("text", {
+            x: xAt(i).toFixed(1),
+            y: 242,
+            "text-anchor": "middle",
+            "font-size": 10,
+            fill: "#5a7d8c",
+          }, row.time.slice(0, 2)));
+        }
+      });
+      svg.appendChild(svgEl("text", { x: left, y: 256, "font-size": 10, fill: "#5a7d8c" }, "小时"));
+      return svg;
+    }
+
+    function renderHourlyPanel(panel, cityName, dateStr, hourlyRows) {
+      panel.textContent = "";
+      if (!hourlyRows || hourlyRows.length === 0) {
+        const emptyTitle = document.createElement("p");
+        emptyTitle.className = "wx-hourly-title";
+        emptyTitle.textContent = "📍 " + cityName + " " + dateStr + " 暂无逐小时天气";
+        panel.appendChild(emptyTitle);
+        return;
+      }
+      const title = document.createElement("p");
+      title.className = "wx-hourly-title";
+      title.textContent = "🕒 " + cityName + " " + dateStr + " 每小时天气";
+      panel.appendChild(title);
+
+      const wrap = document.createElement("div");
+      wrap.className = "wx-chart-wrap";
+      wrap.setAttribute("role", "img");
+      wrap.setAttribute("aria-label", "每小时气温折线图和降雨概率柱状图");
+      const chart = renderHourlyChart(hourlyRows);
+      if (chart) wrap.appendChild(chart);
+      panel.appendChild(wrap);
+
+      const note = document.createElement("p");
+      note.className = "wx-chart-note";
+      note.textContent = "折线为每小时气温，柱状为降雨概率；鼠标悬停或长按图中点位可查看天气状态与是否下雨。";
+      panel.appendChild(note);
+    }
+
+    function toggleHourlyWeather(container, btn, dateStr, cityKey, hourlyRows) {
+      const panelId = btn.getAttribute("aria-controls");
+      const opened = btn.getAttribute("aria-expanded") === "true";
+      container.querySelectorAll(".wx").forEach(function (el) {
+        el.setAttribute("aria-expanded", "false");
+      });
+      container.querySelectorAll(".wx-hourly-panel").forEach(function (el) {
+        el.remove();
+      });
+      if (opened) return;
+
+      btn.setAttribute("aria-expanded", "true");
+      const panel = document.createElement("div");
+      panel.className = "wx-hourly-panel";
+      panel.id = panelId;
+      renderHourlyPanel(panel, cities[cityKey].name, dateStr, hourlyRows);
+      container.insertBefore(panel, container.querySelector(".wx-fetched-at"));
     }
 
     function renderWxEl(container, dateStr, wxKeys, cache, fetchedAtTs) {
       container.innerHTML = "";
       wxKeys.forEach((k) => {
-        const el = document.createElement("span");
+        const el = document.createElement("button");
+        el.type = "button";
         el.className = "wx loading";
+        el.disabled = true;
         el.textContent = "⏳ " + cities[k].name + "：加载中…";
         container.appendChild(el);
       });
 
-      wxKeys.forEach((el, idx) => {
-        const span = container.children[idx];
-        const row = cache[wxKeys[idx]] && cache[wxKeys[idx]][dateStr];
+      wxKeys.forEach((k, idx) => {
+        const btn = container.children[idx];
+        const cityCache = cache[k];
+        const row = cityCache && cityCache.daily && cityCache.daily[dateStr];
         if (!row) {
-          span.className = "wx err";
-          span.textContent = "😅 " + cities[wxKeys[idx]].name + "：暂无数据";
+          btn.className = "wx err";
+          btn.disabled = true;
+          btn.textContent = "😅 " + cities[k].name + "：暂无数据";
           return;
         }
-        span.className = "wx";
-        span.innerHTML =
-          "🌤️ <strong>" + cities[wxKeys[idx]].name + "</strong> " +
+        btn.className = "wx";
+        btn.disabled = false;
+        btn.setAttribute("aria-expanded", "false");
+        btn.setAttribute("aria-controls", "wx-hourly-" + dateStr + "-" + k);
+        btn.title = "点击查看每小时天气";
+        btn.innerHTML =
+          "🌤️ <strong>" + cities[k].name + "</strong> " +
           wmoZh(row.wmo) +
           " · " +
           Math.round(row.min) + "–" + Math.round(row.max) + "°C" +
-          " · 降水概率 " + (row.pop != null ? row.pop : "—") + "%";
+          " · 降水概率 " + (row.pop != null ? row.pop : "—") + "%" +
+          " · 点击看逐小时";
+        btn.addEventListener("click", function () {
+          toggleHourlyWeather(
+            container,
+            btn,
+            dateStr,
+            k,
+            cityCache.hourly && cityCache.hourly[dateStr]
+          );
+        });
       });
 
       if (fetchedAtTs != null) {
@@ -1763,14 +2124,14 @@
 
       const VND_PER_CNY = Math.max(
         1,
-        Number(root.getAttribute("data-fx-vnd-per-cny")) || 3560
+        Number(root.getAttribute("data-fx-vnd-per-cny")) || 3600
       );
       const CNY_PER_VND = 1 / VND_PER_CNY;
       if (note) {
         note.innerHTML =
           "参考汇率（页面内固定）：<strong>1 CNY = " +
           VND_PER_CNY.toLocaleString("zh-CN") +
-          " VND</strong>（约 2026 年 4 月常见中间价量级，非实时）。实际以银行、机场换汇点或卡组织结算为准。";
+          " VND</strong>（导游提供汇率，非实时）。实际以银行、机场换汇点或卡组织结算为准。";
       }
 
       function parseAmount(raw) {
